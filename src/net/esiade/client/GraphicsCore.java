@@ -28,15 +28,13 @@ import com.google.gwt.dom.client.ImageElement;
 public class GraphicsCore {
 	private Canvas canvas, canvasBuffer;
 	private Context2d context, contextBuffer;
-	//private int updateCounter = 0;
 	private static final int WIDTH = 400, HEIGHT = 400;
 	private static final int REFRESH_RATE = 40;
 	private static final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals = new ArrayList<Individual>(0);
     private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>(0);
     private ArrayList<Food> foods = new ArrayList<Food>(0);
-
-    //private CollisionManager collisionManager;
+    private CollisionManager collisionManager;
 
 	public GraphicsCore() {
 		canvas = Canvas.createIfSupported();
@@ -57,20 +55,16 @@ public class GraphicsCore {
 		context.setFillStyle(REDRAW_COLOR);
 		context.fillRect(0, 0, WIDTH, HEIGHT);
 		contextBuffer = canvasBuffer.getContext2d();
-//		contextBuffer.setFillStyle(REDRAW_COLOR);
-//		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
 
 		RootPanel.get("canvasholder").add(canvas);
-		//Vector2D test = new Vector2D(20,20);
-		RootPanel.get().add(new Label("1"));
 //		new Individual("http://www.opentk.com/files/ball.png", 
 //				new Vector2D(), new Vector2D());
-		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(40,40)));
-		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(10, 10)));
-		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(7, 7)));
+		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(-4,-2)));
+		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(3, 3)));
+		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(-2, 0)));
 		
 		foods.add(new Food(new Vector2D(100,100)));
-//		//collisionManager = new CollisionManager(individuals, obstacles, foods);
+		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
 		//doUpdate();
 		//context.drawImage((ImageElement)new Image("http://www.opentk.com/files/ball.png").getElement().cast(), 200, 200);
 		RootPanel.get().add(new Label("2"));
@@ -94,8 +88,12 @@ public class GraphicsCore {
 		//updateCounter = (updateCounter+1)%10;
 		contextBuffer.setFillStyle(CssColor.make("GREEN"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
-		for(Individual individual : individuals)
-			individual.draw(contextBuffer);
+		collisionManager.checkCollision();
+		
+		for(Individual individual : individuals) {
+			individual.updatePos();
+			individual.draw(contextBuffer);	
+		}
 		
 		for(Food food : foods)
 			food.draw(contextBuffer);

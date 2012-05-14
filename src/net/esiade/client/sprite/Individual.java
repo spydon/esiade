@@ -11,7 +11,6 @@ public class Individual extends MovingSprite {
 	
 	public Individual(Vector2D position, Vector2D velocity) {
 		super("http://www.opentk.com/files/ball.png", position, velocity);
-		RootPanel.get().add(new Label("3"));
 		// TODO Auto-generated constructor stub
 	}
 

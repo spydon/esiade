@@ -17,7 +17,6 @@ public abstract class Sprite {
 				  (ImageElement)new Image(imageLocation).getElement().cast();
 		  this.image = image;
 		  this.position = position;
-		  RootPanel.get().add(new Label("plx"));
 	  }
 	  
 	  public double getX() {
@@ -40,8 +39,9 @@ public abstract class Sprite {
 		  return getWidth()/2;
 	  }
 	  
-		public void draw(Context2d context) {
-			context.save();
-			context.drawImage(image, getX(), getY());
-			context.restore();
-		}}
+	  public void draw(Context2d context) {
+		  context.save();
+		  context.drawImage(image, getX(), getY());
+		  context.restore();
+	  }
+}
