@@ -28,7 +28,6 @@ public class Vector2D {
     // -------------------------------------------------------------------------
  
     public Vector2D() {
-       
     	x = Random.nextDouble();
         y = Random.nextDouble();
     }

@@ -5,8 +5,6 @@ import net.esiade.client.Vector2D;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 
 public abstract class Sprite {
 	  public ImageElement image;

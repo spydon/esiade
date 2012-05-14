@@ -4,30 +4,28 @@ import com.google.gwt.user.client.Random;
 
 import net.esiade.client.sprite.Individual;
 
-
-
 public class EvolutionCore {
-	private int width, height;
-		
-	public EvolutionCore(int width, int height){
-		this.width = width;
-		this.height = height;
-	}	
+	public static int WIDTH = 20, HEIGHT = 20;
+	
+	public static void setDimensions(int width, int height) {
+		EvolutionCore.WIDTH = width;
+		EvolutionCore.HEIGHT = height;
+	}
 
-	public enum CType {
+	public static enum CType {
 		ONEPOINT, TWOPOINT, UNIFORM, ARITHMETIC
 	}	
 	
-	public Vector2D[][] getRandomGenome() {
-		Vector2D[][] genome = new Vector2D[width][height];
-		for (int x = 0;x < width;x++)
-			for (int y = 0; y < height;y++)
+	public static Vector2D[][] getRandomGenome() {
+		Vector2D[][] genome = new Vector2D[WIDTH][HEIGHT];
+		for (int x = 0;x < WIDTH;x++)
+			for (int y = 0; y < HEIGHT;y++)
 				genome[x][y] = new Vector2D();
 		return genome;
 	}
 
 	
-	public Individual Crossover(Individual I1, Individual I2, CType type) {
+	public static Individual Crossover(Individual I1, Individual I2, CType type) {
 		Individual I = null;
 		if (type == CType.ONEPOINT)
 			I = OnePointCrossover(I1, I2);
@@ -41,12 +39,11 @@ public class EvolutionCore {
 		return I;
 	}
 
-	private Individual OnePointCrossover(Individual I1, Individual I2){
-		Individual newI;
-		newI = I2;
-		int randomPoint = Random.nextInt(width*height);
-		for(int y = 0;y <= height; y++)
-			for (int x = 0; x <= width; x++)
+	private static Individual OnePointCrossover(Individual I1, Individual I2){
+		Individual newI = I2;
+		int randomPoint = Random.nextInt(WIDTH*HEIGHT);
+		for(int y = 0;y <= HEIGHT; y++)
+			for (int x = 0; x <= WIDTH; x++)
 				if (randomPoint>0){
 					newI.genome[x][y] = I1.genome[x][y];
 					randomPoint--;
@@ -56,19 +53,15 @@ public class EvolutionCore {
 		return newI;
 	}
 	
-	private Individual TwoPointCrossover(Individual I1, Individual I2){
+	private static Individual TwoPointCrossover(Individual I1, Individual I2){
 		return null;
 	}
 	
-	private Individual UniformCrossover(Individual I1, Individual I2){
+	private static Individual UniformCrossover(Individual I1, Individual I2){
 		return null;
 	}
 	
-	private Individual ArithmeticCrossover(Individual I1, Individual I2){
+	private static Individual ArithmeticCrossover(Individual I1, Individual I2){
 		return null;
-	}
-	
-	
-	
-	
+	}	
 }

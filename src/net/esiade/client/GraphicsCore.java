@@ -7,18 +7,14 @@ import java.util.ArrayList;
 
 import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
-import net.esiade.client.sprite.MovingSprite;
 import net.esiade.client.sprite.Obstacle;
-import net.esiade.client.sprite.Sprite;
 
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.dom.client.ImageElement;
 
 
 /**
@@ -28,9 +24,9 @@ import com.google.gwt.dom.client.ImageElement;
 public class GraphicsCore {
 	private Canvas canvas, canvasBuffer;
 	private Context2d context, contextBuffer;
-	private static final int WIDTH = 400, HEIGHT = 400;
-	private static final int REFRESH_RATE = 40;
-	private static final CssColor REDRAW_COLOR = CssColor.make("red");
+	public static final int WIDTH = 800, HEIGHT = 800;
+	private final int REFRESH_RATE = 40;
+	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals = new ArrayList<Individual>(0);
     private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>(0);
     private ArrayList<Food> foods = new ArrayList<Food>(0);
@@ -59,10 +55,10 @@ public class GraphicsCore {
 		RootPanel.get("canvasholder").add(canvas);
 //		new Individual("http://www.opentk.com/files/ball.png", 
 //				new Vector2D(), new Vector2D());
-		EvolutionCore evoCore = new EvolutionCore(WIDTH/5, HEIGHT/5);
-		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(-4,-2), evoCore.getRandomGenome()));
-		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(3, 3), evoCore.getRandomGenome()));
-		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(-2, 0), evoCore.getRandomGenome()));
+		EvolutionCore.setDimensions(WIDTH/20, HEIGHT/20);
+		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(-4,-2), EvolutionCore.getRandomGenome()));
+		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(3, 3), EvolutionCore.getRandomGenome()));
+		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(-2, 0), EvolutionCore.getRandomGenome()));
 		
 		foods.add(new Food(new Vector2D(100,100)));
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
