@@ -15,12 +15,14 @@ public class CollisionManager {
 	private ArrayList<Obstacle> obstacles;
 	private ArrayList<Food> foods;
 	private Label dbgMsg = new Label();
-	private int canvasWidth = RootPanel.get().getOffsetWidth();
-	private int canvasHeight = RootPanel.get().getOffsetHeight();
+	private final int WIDTH, HEIGHT;
 	
-	public CollisionManager(ArrayList<Individual> individuals, 
+	public CollisionManager(int WIDTH, int HEIGHT,
+							ArrayList<Individual> individuals, 
 							ArrayList<Obstacle> obstacles,
 							ArrayList<Food> foods) {
+		this.WIDTH = WIDTH;
+		this.HEIGHT = HEIGHT;
 		this.individuals = individuals;
 		this.obstacles = obstacles;
 		this.foods = foods;
@@ -29,14 +31,18 @@ public class CollisionManager {
 	
 	public void checkCollision() {
 		for(Individual i : individuals) {
-			dbgMsg.setText("Checking collisions...");
 			double iX = i.getX();
 			double iY = i.getY();
+			//RootPanel.get().add(new Label(" " + WIDTH + " " + HEIGHT));
 			
-			if(iX <= 0 || iX+i.getWidth() >= canvasWidth) {
+			if(iX < 0 || iX+i.getWidth() > WIDTH) {
+				i.position.setX((int)((iX+i.getWidth())/WIDTH)*(WIDTH-i.getWidth()));
+				i.horizontalCollision();
+				RootPanel.get().add(new Label("Horizontal collision"));
+			} else if(iY < 0 || iY+i.getHeight() > HEIGHT) {
+				i.position.setY((int)((iY+i.getHeight())/HEIGHT)*(HEIGHT-i.getHeight()));
 				i.verticalCollision();
-			} else if(iY <= 0 || iY+i.getHeight() >= canvasHeight) {
-				i.horizontalCollision();				
+				RootPanel.get().add(new Label("Vertical collision"));
 			}
 	
 			for(Obstacle o : obstacles) {
