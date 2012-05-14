@@ -1,5 +1,7 @@
 package net.esiade.client;
 
+import com.google.gwt.user.client.Random;
+
 /*
  * This is part of Geomajas, a GIS framework, http://www.geomajas.org/.
  *
@@ -26,8 +28,9 @@ public class Vector2D {
     // -------------------------------------------------------------------------
  
     public Vector2D() {
-        x = 0;
-        y = 0;
+       
+    	x = Random.nextDouble();
+        y = Random.nextDouble();
     }
  
     public Vector2D(double x, double y) {
@@ -150,7 +153,7 @@ public class Vector2D {
         return x;
     }
  
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
  
@@ -158,7 +161,7 @@ public class Vector2D {
         return y;
     }
  
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 }

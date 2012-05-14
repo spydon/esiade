@@ -35,8 +35,7 @@ public class GraphicsCore {
     private ArrayList<Individual> individuals = new ArrayList<Individual>(0);
     private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>(0);
     private ArrayList<Food> foods = new ArrayList<Food>(0);
-
-    //private CollisionManager collisionManager;
+    private CollisionManager collisionManager;
 
 	public GraphicsCore() {
 		canvas = Canvas.createIfSupported();
@@ -65,12 +64,12 @@ public class GraphicsCore {
 		RootPanel.get().add(new Label("1"));
 //		new Individual("http://www.opentk.com/files/ball.png", 
 //				new Vector2D(), new Vector2D());
-		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(40,40)));
-		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(10, 10)));
-		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(7, 7)));
+		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(-4,-2)));
+		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(3, 3)));
+		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(-2, 0)));
 		
 		foods.add(new Food(new Vector2D(100,100)));
-//		//collisionManager = new CollisionManager(individuals, obstacles, foods);
+		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
 		//doUpdate();
 		//context.drawImage((ImageElement)new Image("http://www.opentk.com/files/ball.png").getElement().cast(), 200, 200);
 		RootPanel.get().add(new Label("2"));
@@ -94,8 +93,12 @@ public class GraphicsCore {
 		//updateCounter = (updateCounter+1)%10;
 		contextBuffer.setFillStyle(CssColor.make("GREEN"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
-		for(Individual individual : individuals)
-			individual.draw(contextBuffer);
+		collisionManager.checkCollision();
+		
+		for(Individual individual : individuals) {
+			individual.updatePos();
+			individual.draw(contextBuffer);	
+		}
 		
 		for(Food food : foods)
 			food.draw(contextBuffer);
