@@ -59,9 +59,10 @@ public class GraphicsCore {
 		RootPanel.get("canvasholder").add(canvas);
 //		new Individual("http://www.opentk.com/files/ball.png", 
 //				new Vector2D(), new Vector2D());
-		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(-4,-2)));
-		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(3, 3)));
-		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(-2, 0)));
+		EvolutionCore evoCore = new EvolutionCore(WIDTH/5, HEIGHT/5);
+		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(-4,-2), evoCore.getRandomGenome()));
+		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(3, 3), evoCore.getRandomGenome()));
+		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(-2, 0), evoCore.getRandomGenome()));
 		
 		foods.add(new Food(new Vector2D(100,100)));
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);

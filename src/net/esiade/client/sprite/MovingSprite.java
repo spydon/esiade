@@ -27,8 +27,6 @@ public abstract class MovingSprite extends Sprite{
 //		What should happen to the vectors if there is a
 //		horizontal collision? Set the vectors to make the
 //		individual go sideways.
-		RootPanel.get().add(new Label("YESSS?!"));
-
 		velocity.setY(0.0);
 	}
 	
@@ -36,8 +34,6 @@ public abstract class MovingSprite extends Sprite{
 //		What should happen to the vectors if there is a
 //		horizontal collision? Set the vectors to make the
 //		individual go sideways.
-		RootPanel.get().add(new Label("NOOO?!"));
-
 		velocity.setX(0.0);
 	}
 	
