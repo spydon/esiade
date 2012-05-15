@@ -41,6 +41,12 @@ public class CollisionManager {
 				i.position.setY((int)((iY+i.getHeight())/HEIGHT)*(HEIGHT-i.getHeight()));
 				i.verticalCollision();
 			}
+			
+			for(Individual i2 : individuals) {
+				if(!i.equals(i2) && isCollision(i, i2)) {
+					EvolutionCore.Crossover(i, i2, EvolutionCore.CType.ONEPOINT);
+				}
+			}
 	
 			for(Obstacle o : obstacles) {
 				if(iX >= o.getX() && iX <= o.getX()+o.getWidth())

@@ -7,18 +7,14 @@ import java.util.ArrayList;
 
 import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
-import net.esiade.client.sprite.MovingSprite;
 import net.esiade.client.sprite.Obstacle;
-import net.esiade.client.sprite.Sprite;
 
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.dom.client.ImageElement;
 
 
 /**
@@ -28,15 +24,26 @@ import com.google.gwt.dom.client.ImageElement;
 public class GraphicsCore {
 	private Canvas canvas, canvasBuffer;
 	private Context2d context, contextBuffer;
-	private static final int WIDTH = 400, HEIGHT = 400;
-	private static final int REFRESH_RATE = 40;
-	private static final CssColor REDRAW_COLOR = CssColor.make("red");
-    private ArrayList<Individual> individuals = new ArrayList<Individual>(0);
-    private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>(0);
-    private ArrayList<Food> foods = new ArrayList<Food>(0);
+	public static int WIDTH, HEIGHT;
+	private final int REFRESH_RATE = 40;
+	private final CssColor REDRAW_COLOR = CssColor.make("red");
+    private ArrayList<Individual> individuals;
+    private ArrayList<Obstacle> obstacles;
+    private ArrayList<Food> foods;
     private CollisionManager collisionManager;
 
-	public GraphicsCore() {
+	public GraphicsCore(int WIDTH, int HEIGHT,
+						ArrayList<Individual> individuals,
+						ArrayList<Obstacle> obstacles,
+						ArrayList<Food> foods,
+						CollisionManager collisionManager) {
+		GraphicsCore.WIDTH = WIDTH;
+		GraphicsCore.HEIGHT = HEIGHT;
+		this.individuals = individuals;
+		this.obstacles = obstacles;
+		this.foods = foods;
+		this.collisionManager = collisionManager;
+		
 		canvas = Canvas.createIfSupported();
 		canvas.setWidth(WIDTH + "px");
 		canvas.setHeight(HEIGHT + "px");
@@ -49,7 +56,6 @@ public class GraphicsCore {
 		canvasBuffer.setHeight(HEIGHT + "px");
 		canvasBuffer.setCoordinateSpaceWidth(WIDTH);
 		canvasBuffer.setCoordinateSpaceHeight(HEIGHT);
-		//canvasBuffer.setVisible(false);
 		
 		context = canvas.getContext2d();
 		context.setFillStyle(REDRAW_COLOR);
@@ -57,17 +63,6 @@ public class GraphicsCore {
 		contextBuffer = canvasBuffer.getContext2d();
 
 		RootPanel.get("canvasholder").add(canvas);
-//		new Individual("http://www.opentk.com/files/ball.png", 
-//				new Vector2D(), new Vector2D());
-		EvolutionCore evoCore = new EvolutionCore(WIDTH/5, HEIGHT/5);
-		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(-4,-2), evoCore.getRandomGenome()));
-		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(3, 3), evoCore.getRandomGenome()));
-		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(-2, 0), evoCore.getRandomGenome()));
-		
-		foods.add(new Food(new Vector2D(100,100)));
-		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
-		//doUpdate();
-		//context.drawImage((ImageElement)new Image("http://www.opentk.com/files/ball.png").getElement().cast(), 200, 200);
 		RootPanel.get().add(new Label("2"));
 		onModuleLoad();
 
@@ -84,9 +79,6 @@ public class GraphicsCore {
 	}
 	
 	private void doUpdate() {
-		//if(updateCounter == 0)
-			//collisionManager.checkCollision();
-		//updateCounter = (updateCounter+1)%10;
 		contextBuffer.setFillStyle(CssColor.make("GREEN"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
 		collisionManager.checkCollision();
@@ -98,6 +90,9 @@ public class GraphicsCore {
 		
 		for(Food food : foods)
 			food.draw(contextBuffer);
+		
+		for(Obstacle o : obstacles)
+			o.draw(contextBuffer);
 		
 	    context.drawImage(contextBuffer.getCanvas(), 0, 0);
 	}
