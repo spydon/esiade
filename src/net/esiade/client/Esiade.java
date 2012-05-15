@@ -2,6 +2,7 @@ package net.esiade.client;
 
 import java.util.ArrayList;
 
+import net.esiade.client.EvolutionCore.CType;
 import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
 import net.esiade.client.sprite.Obstacle;
@@ -37,10 +38,12 @@ public class Esiade implements EntryPoint {
 	}
 	
 	private void run() {
+		new EvolutionCore(WIDTH, HEIGHT, getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())));
 		EvolutionCore.setDimensions(WIDTH/20, HEIGHT/20);
-		int numInd = getNumber(tb_ind.getText());
-		int numFood = getNumber(tb_food.getText());
-		int numObs = getNumber(tb_obs.getText());
+		int numInd = (int)getNumber(tb_ind.getText());
+		int numFood = (int)getNumber(tb_food.getText());
+		int numObs = (int)getNumber(tb_obs.getText());
+		RootPanel.get("settingsholder").clear();
 		
 		for(int x = 0; x < numInd; x++)
 			individuals.add(new Individual(new Vector2D(WIDTH,HEIGHT), new Vector2D(), EvolutionCore.getRandomGenome()));
@@ -51,18 +54,28 @@ public class Esiade implements EntryPoint {
 		for(int x = 0; x < numObs; x++)
 			obstacles.add(new Obstacle(new Vector2D(WIDTH,HEIGHT)));
 
-		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);		
+		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
 		new GraphicsCore(WIDTH, HEIGHT, individuals, obstacles, foods, collisionManager);
 	}
 	
-	private int getNumber(String parse) {
-		int num = 0;
+	private double getNumber(String parse) {
+		double num = 0;
 		try {
-			num = Integer.parseInt(parse);
+			num = Double.parseDouble(parse);
 		} catch(NumberFormatException nfe) {
 			//Do nothing
 		}
 		return num;
+	}
+	
+	private CType getType(String parse) {
+		if(parse.equals("One-point")) {
+			return CType.ONEPOINT;
+		} else if(parse.equals("Two-point")) {
+			return CType.TWOPOINT;
+		} else {
+			return CType.UNIFORM;
+		}
 	}
 	
 	private void makeSettingsUI() {
@@ -98,7 +111,6 @@ public class Esiade implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				run();
-				RootPanel.get("settingsholder").clear();
 			}
 		});
 		RootPanel.get("settingsholder").add(new HTML("<br/>"));

@@ -44,7 +44,7 @@ public class CollisionManager {
 			
 			for(Individual i2 : individuals) {
 				if(!i.equals(i2) && isCollision(i, i2)) {
-					EvolutionCore.Crossover(i, i2, EvolutionCore.CType.ONEPOINT);
+					EvolutionCore.Crossover(i, i2);
 				}
 			}
 	

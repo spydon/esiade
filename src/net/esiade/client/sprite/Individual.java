@@ -13,7 +13,6 @@ public class Individual extends MovingSprite {
 	public Individual(Vector2D position, Vector2D velocity, Vector2D[][] genome) {
 		super("./individual.png", position, velocity);
 		this.genome = genome;
-		// TODO Auto-generated constructor stub
 	}
 
 	public void eat() {
@@ -26,6 +25,10 @@ public class Individual extends MovingSprite {
 	
 	public Vector2D getVelocity() {
 		return genome[((int)position.x/GraphicsCore.WIDTH)*EvolutionCore.WIDTH][((int)position.y/GraphicsCore.HEIGHT)*EvolutionCore.HEIGHT];
+	}
+
+	public void starve() {
+		hungerLevel--;
 	}
 
 }

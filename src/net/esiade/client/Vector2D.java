@@ -8,8 +8,8 @@ public class Vector2D {
     public double y;
  
     public Vector2D() {
-    	x = (Random.nextDouble()-Random.nextDouble());
-        y = (Random.nextDouble()-Random.nextDouble());
+    	x = (Random.nextInt(2)==1 ? 1 : -1)*Random.nextDouble();
+        y = (Random.nextInt(2)==1 ? 1 : -1)*Random.nextDouble();
     }
     
     public Vector2D(int width, int height) {

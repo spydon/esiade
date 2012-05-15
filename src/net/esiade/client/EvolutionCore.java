@@ -10,7 +10,8 @@ import net.esiade.client.sprite.Individual;
  */
 public class EvolutionCore {
 	public static int WIDTH, HEIGHT;
-	private static int mRate, cRate;
+	private static double mRate, cRate;
+	private static CType type;
 	
 	/**
 	 * @param width The width of the map matrix
@@ -18,11 +19,12 @@ public class EvolutionCore {
 	 * @param mRate The mutation rate
 	 * @param cRate The crossover rate
 	 */
-	public EvolutionCore(int width, int height, int mRate, int cRate){
+	public EvolutionCore(int width, int height, double mRate, double cRate, CType type){
 		EvolutionCore.WIDTH = width;
 		EvolutionCore.HEIGHT = height;
 		EvolutionCore.mRate = mRate;
 		EvolutionCore.cRate = cRate;
+		EvolutionCore.type = type;
 	}
 	
 	/**
@@ -73,9 +75,8 @@ public class EvolutionCore {
 	 * This is a general function for crossover, this function redirects to the appropriate crossover subfunction. The subfunctions implement common crossover operations, but applied on vectors instead of bits.
 	 * @param I1 The first individual
 	 * @param I2 The second individual
-	 * @param type The type of crossover to be done, see CType.
 	 */
-	public static void Crossover(Individual I1, Individual I2, CType type) {
+	public static void Crossover(Individual I1, Individual I2) {
 	if (Random.nextDouble() < cRate)
 		if (type == CType.ONEPOINT)
 			OnePointCrossover(I1, I2);
