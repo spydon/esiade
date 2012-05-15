@@ -11,7 +11,7 @@ public class Individual extends MovingSprite {
 	public Vector2D[][] genome;
 	
 	public Individual(Vector2D position, Vector2D velocity, Vector2D[][] genome) {
-		super("/home/spydon/tmp/test.png", position, velocity);
+		super("./individual.png", position, velocity);
 		this.genome = genome;
 		// TODO Auto-generated constructor stub
 	}

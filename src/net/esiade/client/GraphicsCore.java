@@ -25,7 +25,7 @@ public class GraphicsCore {
 	private Canvas canvas, canvasBuffer;
 	private Context2d context, contextBuffer;
 	public static int WIDTH, HEIGHT;
-	private final int REFRESH_RATE = 40;
+	private final int REFRESH_RATE = 80;
 	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals;
     private ArrayList<Obstacle> obstacles;
@@ -63,7 +63,6 @@ public class GraphicsCore {
 		contextBuffer = canvasBuffer.getContext2d();
 
 		RootPanel.get("canvasholder").add(canvas);
-		RootPanel.get().add(new Label("2"));
 		onModuleLoad();
 
 	}

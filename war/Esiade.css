@@ -1,0 +1,37 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+body {
+	/*position: relative;*/
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+}
+
+h1 {
+	/*position: absolute;*/
+	text-align: center;
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	/*margin: 40px 0px 70px;*/
+}
+
+#canvasholder {
+	position:relative;
+	/*float:center;*/
+	margin: 0px;
+	padding: 0px;
+}
+
+#settingsholder {
+	position:relative;
+	/*float:center;*/
+	margin: 10px;
+	padding: 10px;
+}
+
+
+
+

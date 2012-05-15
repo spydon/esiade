@@ -7,6 +7,14 @@ import net.esiade.client.sprite.Individual;
 import net.esiade.client.sprite.Obstacle;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -16,35 +24,86 @@ public class Esiade implements EntryPoint {
     private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>(0);
     private ArrayList<Food> foods = new ArrayList<Food>(0);
     private CollisionManager collisionManager;
-	public final static int WIDTH = 800, HEIGHT = 800;
+    private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover;
+    private ListBox lb_crossover;
+    private Button run;
+	public final static int WIDTH = 500, HEIGHT = 500;
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		makeSettingsUI();
+	}
+	
+	private void run() {
 		EvolutionCore.setDimensions(WIDTH/20, HEIGHT/20);
-		individuals.add(new Individual(new Vector2D(200,200), new Vector2D(), EvolutionCore.getRandomGenome()));
-		individuals.add(new Individual(new Vector2D(200, 300), new Vector2D(), EvolutionCore.getRandomGenome()));
-		individuals.add(new Individual(new Vector2D(300, 300), new Vector2D(), EvolutionCore.getRandomGenome()));
+		int numInd = getNumber(tb_ind.getText());
+		int numFood = getNumber(tb_food.getText());
+		int numObs = getNumber(tb_obs.getText());
 		
-		foods.add(new Food(new Vector2D(100,100)));
-		foods.add(new Food(new Vector2D(101,200)));
-		foods.add(new Food(new Vector2D(100,300)));
-		foods.add(new Food(new Vector2D(150,160)));
-		foods.add(new Food(new Vector2D(500,600)));
-		foods.add(new Food(new Vector2D(200,400)));
-		foods.add(new Food(new Vector2D(120,600)));
-		foods.add(new Food(new Vector2D(50,10)));
-		foods.add(new Food(new Vector2D(10,10)));
-		foods.add(new Food(new Vector2D(200,100)));
-		foods.add(new Food(new Vector2D(360,100)));
-		foods.add(new Food(new Vector2D(340,180)));
-		foods.add(new Food(new Vector2D(80,190)));
-		foods.add(new Food(new Vector2D(100,280)));
-		foods.add(new Food(new Vector2D(20,430)));
+		for(int x = 0; x < numInd; x++)
+			individuals.add(new Individual(new Vector2D(WIDTH,HEIGHT), new Vector2D(), EvolutionCore.getRandomGenome()));
+		
+		for(int x = 0; x < numFood; x++)
+			foods.add(new Food(new Vector2D(WIDTH,HEIGHT)));
+
+		for(int x = 0; x < numObs; x++)
+			obstacles.add(new Obstacle(new Vector2D(WIDTH,HEIGHT)));
 
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);		
 		new GraphicsCore(WIDTH, HEIGHT, individuals, obstacles, foods, collisionManager);
-
+	}
+	
+	private int getNumber(String parse) {
+		int num = 0;
+		try {
+			num = Integer.parseInt(parse);
+		} catch(NumberFormatException nfe) {
+			//Do nothing
+		}
+		return num;
+	}
+	
+	private void makeSettingsUI() {
+		RootPanel.get("settingsholder").add(new Label("# of Individuals: "));
+		tb_ind = new TextBox();
+		RootPanel.get("settingsholder").add(tb_ind);
+		
+		RootPanel.get("settingsholder").add(new Label("# of Food: "));
+		tb_food = new TextBox();
+		RootPanel.get("settingsholder").add(tb_food);
+		
+		RootPanel.get("settingsholder").add(new Label("# of Obstacles: "));
+		tb_obs = new TextBox();
+		RootPanel.get("settingsholder").add(tb_obs);
+		
+		RootPanel.get("settingsholder").add(new Label("Mutationrate(0.0-1.0): "));
+		tb_mutation = new TextBox();
+		RootPanel.get("settingsholder").add(tb_mutation);
+		
+		RootPanel.get("settingsholder").add(new Label("Crossover rate(0.0-1.0): "));
+		tb_crossover = new TextBox();
+		RootPanel.get("settingsholder").add(tb_crossover);
+		
+		RootPanel.get("settingsholder").add(new Label("Crossover type: "));
+		lb_crossover = new ListBox();
+		lb_crossover.addItem("One-point");
+		lb_crossover.addItem("Two-point");
+		lb_crossover.addItem("Uniform");
+		RootPanel.get("settingsholder").add(lb_crossover);
+		
+		run = new Button("Run simulation!!!");
+		run.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				run();
+				RootPanel.get("settingsholder").clear();
+			}
+		});
+		RootPanel.get("settingsholder").add(new HTML("<br/>"));
+		RootPanel.get("settingsholder").add(run);
+		
+		//RootPanel.get("settingsholder").add();
 	}
 }
