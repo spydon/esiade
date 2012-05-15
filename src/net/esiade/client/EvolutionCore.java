@@ -9,8 +9,8 @@ public class EvolutionCore {
 	private int mRate, cRate;
 	
 	public EvolutionCore(int width, int height, int mRate, int cRate){
-		this.width = width;
-		this.height = height;
+		EvolutionCore.WIDTH = width;
+		EvolutionCore.HEIGHT = height;
 		this.mRate = mRate;
 		this.cRate = cRate;
 	}
@@ -61,15 +61,15 @@ public class EvolutionCore {
 		return newI;
 	}
 	
-	private Individual TwoPointCrossover(Individual I1, Individual I2){
+	private static Individual TwoPointCrossover(Individual I1, Individual I2){
 		Individual newI;
 		newI = I2;
-		int randomPoint1 = Random.nextInt(width*height);
-		int randomPoint2 = Random.nextInt(width*height-randomPoint1);
+		int randomPoint1 = Random.nextInt(WIDTH*HEIGHT);
+		int randomPoint2 = Random.nextInt(WIDTH*HEIGHT-randomPoint1);
 		randomPoint2 +=randomPoint1;
 		
-		for(int y = randomPoint1 / width;y <= height; y++)
-			for (int x = randomPoint1 % width; x <= width; x++)
+		for(int y = randomPoint1 / WIDTH;y <= HEIGHT; y++)
+			for (int x = randomPoint1 % WIDTH; x <= WIDTH; x++)
 				if (randomPoint1 != randomPoint2){
 					newI.genome[x][y] = I1.genome[x][y];
 					randomPoint2--;
@@ -79,11 +79,11 @@ public class EvolutionCore {
 		return newI;
 	}
 	
-	private Individual UniformCrossover(Individual I1, Individual I2){
+	private static Individual UniformCrossover(Individual I1, Individual I2){
 		Individual newI;
 		newI = I2;
-		for(int y = 0;y<=height;y++)
-			for(int x=0;x<=width;x++)
+		for(int y = 0;y<=HEIGHT;y++)
+			for(int x=0;x<=WIDTH;x++)
 				if (Random.nextDouble() > 0.5)
 					newI.genome[x][y] = I1.genome[x][y];
 
@@ -96,10 +96,10 @@ public class EvolutionCore {
 	}
 	
 	
-	private Individual Mutation(Individual I){
-		for (int y = 0;y < height;y++)
-			for (int y=0;y< width;y++)
-
+	private static Individual Mutation(Individual I){
+		for (int y = 0;y < HEIGHT;y++)
+			for (int x=0;x< WIDTH;x++)
+				break;
+	return null;
 	}
-	
 }
