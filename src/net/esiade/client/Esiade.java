@@ -55,7 +55,7 @@ public class Esiade implements EntryPoint {
 			obstacles.add(new Obstacle(new Vector2D(WIDTH,HEIGHT)));
 
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
-		new GraphicsCore(WIDTH, HEIGHT, individuals, obstacles, foods, collisionManager);
+		new GraphicsCore(individuals, obstacles, foods, collisionManager);
 	}
 	
 	private double getNumber(String parse) {
@@ -81,22 +81,27 @@ public class Esiade implements EntryPoint {
 	private void makeSettingsUI() {
 		RootPanel.get("settingsholder").add(new Label("# of Individuals: "));
 		tb_ind = new TextBox();
+		tb_ind.setText("1");
 		RootPanel.get("settingsholder").add(tb_ind);
 		
 		RootPanel.get("settingsholder").add(new Label("# of Food: "));
 		tb_food = new TextBox();
+		tb_food.setText("20");
 		RootPanel.get("settingsholder").add(tb_food);
 		
 		RootPanel.get("settingsholder").add(new Label("# of Obstacles: "));
 		tb_obs = new TextBox();
+		tb_obs.setText("0");
 		RootPanel.get("settingsholder").add(tb_obs);
 		
 		RootPanel.get("settingsholder").add(new Label("Mutationrate(0.0-1.0): "));
 		tb_mutation = new TextBox();
+		tb_mutation.setText("0.0");
 		RootPanel.get("settingsholder").add(tb_mutation);
 		
 		RootPanel.get("settingsholder").add(new Label("Crossover rate(0.0-1.0): "));
 		tb_crossover = new TextBox();
+		tb_crossover.setText("0.8");
 		RootPanel.get("settingsholder").add(tb_crossover);
 		
 		RootPanel.get("settingsholder").add(new Label("Crossover type: "));

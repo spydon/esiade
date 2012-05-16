@@ -34,13 +34,12 @@ public class GraphicsCore {
     private CollisionManager collisionManager;
     private Label l_day, l_ind, l_food, l_obs;
 
-	public GraphicsCore(int WIDTH, int HEIGHT,
-						ArrayList<Individual> individuals,
+	public GraphicsCore(ArrayList<Individual> individuals,
 						ArrayList<Obstacle> obstacles,
 						ArrayList<Food> foods,
 						CollisionManager collisionManager) {
-		GraphicsCore.WIDTH = WIDTH;
-		GraphicsCore.HEIGHT = HEIGHT;
+		GraphicsCore.WIDTH = Esiade.WIDTH;
+		GraphicsCore.HEIGHT = Esiade.HEIGHT;
 		this.individuals = individuals;
 		this.obstacles = obstacles;
 		this.foods = foods;
@@ -84,6 +83,8 @@ public class GraphicsCore {
 	    final Timer timer = new Timer() {
 	        @Override
 	        public void run() {
+	          if(individuals.size() == 0)
+	        	  this.cancel();
 	          doUpdate();
 	        }
 	      };
@@ -107,7 +108,7 @@ public class GraphicsCore {
 		for(Obstacle o : obstacles)
 			o.draw(contextBuffer);
 		
-		if(day%10==0)
+		if(day%100==0)
 			for(Individual i : individuals) {
 				i.starve();
 				if(i.getHunger() <= 0)

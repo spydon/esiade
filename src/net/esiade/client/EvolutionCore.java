@@ -1,6 +1,8 @@
 package net.esiade.client;
 
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import net.esiade.client.sprite.Individual;
 
@@ -50,8 +52,10 @@ public class EvolutionCore {
 	public static Vector2D[][] getRandomGenome() {
 		Vector2D[][] genome = new Vector2D[WIDTH][HEIGHT];
 		for (int x = 0;x < WIDTH;x++)
-			for (int y = 0; y < HEIGHT;y++)
+			for (int y = 0; y < HEIGHT;y++) {
 				genome[x][y] = new Vector2D();
+				//RootPanel.get().add(new Label("" + genome[x][y]));
+			}
 		return genome;
 	}
 
@@ -87,8 +91,8 @@ public class EvolutionCore {
 
 		Mutation(I1);
 		Mutation(I2);
-		I1.position = new Vector2D(Esiade.WIDTH,Esiade.HEIGHT);
-		I2.position = new Vector2D(Esiade.WIDTH,Esiade.HEIGHT);
+		I1.position = new Vector2D(Esiade.WIDTH-I1.getWidth(),Esiade.HEIGHT-I1.getHeight());
+		I2.position = new Vector2D(Esiade.WIDTH-I2.getWidth(),Esiade.HEIGHT-I2.getHeight());
 	}
 
 	/**
