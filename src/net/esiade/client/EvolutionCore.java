@@ -87,6 +87,8 @@ public class EvolutionCore {
 
 		Mutation(I1);
 		Mutation(I2);
+		I1.position = new Vector2D(Esiade.WIDTH,Esiade.HEIGHT);
+		I2.position = new Vector2D(Esiade.WIDTH,Esiade.HEIGHT);
 	}
 
 	/**
@@ -97,8 +99,8 @@ public class EvolutionCore {
 	private static void OnePointCrossover(Individual I1, Individual I2){
 
 		int randomPoint = Random.nextInt(WIDTH*HEIGHT);
-		for(int y = 0;y <= HEIGHT; y++)
-			for (int x = 0; x <= WIDTH; x++)
+		for(int y = 0;y < HEIGHT; y++)
+			for (int x = 0; x < WIDTH; x++)
 				if (randomPoint>0){
 					SwitchVectors(I1, I2, x, y);
 					randomPoint--;
@@ -110,14 +112,13 @@ public class EvolutionCore {
 	/**
 	 * One point crossover. The two individuals will be modified to two new individuals, in a 2-point crossover fashion. 
 	 * @param I1 The first individual
-	 * @param I2 The second individual
 	 */
 	private static void TwoPointCrossover(Individual I1, Individual I2){
 		int randomPoint1 = Random.nextInt(WIDTH*HEIGHT);
 		int randomPoint2 = Random.nextInt(WIDTH*HEIGHT-randomPoint1);
 		
-		for(int y = randomPoint1 / WIDTH;y <= HEIGHT; y++)
-			for (int x = randomPoint1 % WIDTH; x <= WIDTH; x++)
+		for(int y = randomPoint1 / WIDTH;y < HEIGHT; y++)
+			for (int x = randomPoint1 % WIDTH; x < WIDTH; x++)
 				if (randomPoint2 >= 0){
 					SwitchVectors(I1, I2, x, y);
 					randomPoint2--;
@@ -132,11 +133,10 @@ public class EvolutionCore {
 	 * @param I2 The second individual
 	 */
 	private static void UniformCrossover(Individual I1, Individual I2){
-		for(int y = 0;y<=HEIGHT;y++)
-			for(int x=0;x<=WIDTH;x++)
-				if (Random.nextDouble() > 0.5){
+		for(int y = 0;y<HEIGHT;y++)
+			for(int x=0;x<WIDTH;x++)
+				if (Random.nextDouble() > 0.5)
 					SwitchVectors(I1, I2, x, y);
-				}
 	}
 	
 	
