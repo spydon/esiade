@@ -28,15 +28,6 @@ public class EvolutionCore {
 		EvolutionCore.cRate = cRate;
 		EvolutionCore.type = type;
 	}
-	
-	/**
-	 * @param width 
-	 * @param height
-	 */
-	public static void setDimensions(int width, int height) {
-		EvolutionCore.WIDTH = width;
-		EvolutionCore.HEIGHT = height;
-	}
 
 	/**
 	 * @author jonathan

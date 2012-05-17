@@ -25,10 +25,11 @@ public class Esiade implements EntryPoint {
     private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>(0);
     private ArrayList<Food> foods = new ArrayList<Food>(0);
     private CollisionManager collisionManager;
-    private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover;
+    private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
+    				tb_matrix_x, tb_matrix_y, tb_width, tb_height;
     private ListBox lb_crossover;
     private Button run;
-	public final static int WIDTH = 500, HEIGHT = 500;
+	public static int WIDTH = 500, HEIGHT = 500;
 
 	/**
 	 * This is the entry point method.
@@ -38,8 +39,10 @@ public class Esiade implements EntryPoint {
 	}
 	
 	private void run() {
-		new EvolutionCore(WIDTH, HEIGHT, getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())));
-		EvolutionCore.setDimensions(WIDTH/20, HEIGHT/20);
+		new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())));
+		Esiade.WIDTH = (int)getNumber(tb_width.getText());
+		Esiade.HEIGHT = (int)getNumber(tb_height.getText());
+
 		int numInd = (int)getNumber(tb_ind.getText());
 		int numFood = (int)getNumber(tb_food.getText());
 		int numObs = (int)getNumber(tb_obs.getText());
@@ -103,6 +106,30 @@ public class Esiade implements EntryPoint {
 		tb_crossover = new TextBox();
 		tb_crossover.setText("0.8");
 		RootPanel.get("settingsholder").add(tb_crossover);
+
+		RootPanel.get("settingsholder").add(new Label("Environment size(X,Y): "));
+		tb_width = new TextBox();
+		tb_width.setText("500");
+		tb_width.setMaxLength(4);
+		tb_width.setWidth("30px");
+		tb_height = new TextBox();
+		tb_height.setText("500");
+		tb_height.setMaxLength(4);
+		tb_height.setWidth("30px");
+		RootPanel.get("settingsholder").add(tb_width);
+		RootPanel.get("settingsholder").add(tb_height);
+		
+		RootPanel.get("settingsholder").add(new Label("Matrix size(X,Y): "));
+		tb_matrix_x = new TextBox();
+		tb_matrix_x.setText("25");
+		tb_matrix_x.setMaxLength(4);
+		tb_matrix_x.setWidth("30px");
+		tb_matrix_y = new TextBox();
+		tb_matrix_y.setText("25");
+		tb_matrix_y.setMaxLength(4);
+		tb_matrix_y.setWidth("30px");
+		RootPanel.get("settingsholder").add(tb_matrix_x);
+		RootPanel.get("settingsholder").add(tb_matrix_y);
 		
 		RootPanel.get("settingsholder").add(new Label("Crossover type: "));
 		lb_crossover = new ListBox();

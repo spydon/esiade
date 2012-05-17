@@ -24,7 +24,7 @@ public class Individual extends MovingSprite {
 	public void updatePos() {
 //		Update the position to a new position with the vectors, 
 //		collisions have been taken care of.
-		RootPanel.get().add(new Label("Position: " + position + " BigWH: " + Esiade.WIDTH + " " + Esiade.HEIGHT + " Small: " + EvolutionCore.WIDTH + " " + EvolutionCore.HEIGHT));
+		//RootPanel.get().add(new Label("Position: " + position + " BigWH: " + Esiade.WIDTH + " " + Esiade.HEIGHT + " Small: " + EvolutionCore.WIDTH + " " + EvolutionCore.HEIGHT));
 		velocity = genome[(int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH)]
 						[(int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT)];
 		//RootPanel.get().add(new Label("Velocity after: " + velocity));
