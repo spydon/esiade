@@ -6,7 +6,8 @@ import com.google.gwt.canvas.dom.client.Context2d;
 
 
 public abstract class StaticSprite extends Sprite {
-
+	public static double spawnRate = 0.0;
+	
 	public StaticSprite(String image, Vector2D position) {
 		super(image, position);
 		// TODO Auto-generated constructor stub

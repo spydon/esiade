@@ -26,7 +26,8 @@ public class Esiade implements EntryPoint {
     private ArrayList<Food> foods = new ArrayList<Food>(0);
     private CollisionManager collisionManager;
     private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
-    				tb_matrix_x, tb_matrix_y, tb_width, tb_height;
+    				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
+    				tb_maptrust, tb_starve, tb_foodspawn, tb_selfrepr, tb_foodrepr;
     private ListBox lb_crossover;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -42,6 +43,7 @@ public class Esiade implements EntryPoint {
 		new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())));
 		Esiade.WIDTH = (int)getNumber(tb_width.getText());
 		Esiade.HEIGHT = (int)getNumber(tb_height.getText());
+		Food.spawnRate = getNumber(tb_foodspawn.getText());
 
 		int numInd = (int)getNumber(tb_ind.getText());
 		int numFood = (int)getNumber(tb_food.getText());
@@ -49,7 +51,10 @@ public class Esiade implements EntryPoint {
 		RootPanel.get("settingsholder").clear();
 		
 		for(int x = 0; x < numInd; x++)
-			individuals.add(new Individual(new Vector2D(WIDTH,HEIGHT), new Vector2D(), EvolutionCore.getRandomGenome()));
+			individuals.add(new Individual(new Vector2D(WIDTH,HEIGHT), new Vector2D(), EvolutionCore.getRandomGenome(), 
+											(int)getNumber(tb_velocitycheck.getText()), getNumber(tb_maptrust.getText()), 
+											(int)getNumber(tb_starve.getText()), (int)getNumber(tb_selfrepr.getText()), 
+											(int)getNumber(tb_foodrepr.getText())));
 		
 		for(int x = 0; x < numFood; x++)
 			foods.add(new Food(new Vector2D(WIDTH,HEIGHT)));
@@ -62,7 +67,7 @@ public class Esiade implements EntryPoint {
 	}
 	
 	private double getNumber(String parse) {
-		double num = 0;
+		double num = 0.0;
 		try {
 			num = Double.parseDouble(parse);
 		} catch(NumberFormatException nfe) {
@@ -92,6 +97,21 @@ public class Esiade implements EntryPoint {
 		tb_food.setText("20");
 		RootPanel.get("settingsholder").add(tb_food);
 		
+		RootPanel.get("settingsholder").add(new Label("Food spawnrate(0.0-1.0): "));
+		tb_foodspawn = new TextBox();
+		tb_foodspawn.setText("0.1");
+		RootPanel.get("settingsholder").add(tb_foodspawn);
+		
+		RootPanel.get("settingsholder").add(new Label("# of food needed for reproduction: "));
+		tb_foodrepr = new TextBox();
+		tb_foodrepr.setText("10");
+		RootPanel.get("settingsholder").add(tb_foodrepr);
+		
+		RootPanel.get("settingsholder").add(new Label("# of food needed for selfreproduction: "));
+		tb_selfrepr = new TextBox();
+		tb_selfrepr.setText("100");
+		RootPanel.get("settingsholder").add(tb_selfrepr);
+		
 		RootPanel.get("settingsholder").add(new Label("# of Obstacles: "));
 		tb_obs = new TextBox();
 		tb_obs.setText("0");
@@ -106,6 +126,21 @@ public class Esiade implements EntryPoint {
 		tb_crossover = new TextBox();
 		tb_crossover.setText("0.8");
 		RootPanel.get("settingsholder").add(tb_crossover);
+		
+		RootPanel.get("settingsholder").add(new Label("Maptrust rate(0.0-1.0): "));
+		tb_maptrust = new TextBox();
+		tb_maptrust.setText("0.9");
+		RootPanel.get("settingsholder").add(tb_maptrust);
+		
+		RootPanel.get("settingsholder").add(new Label("Velocity check(1-10000)(Days): "));
+		tb_velocitycheck = new TextBox();
+		tb_velocitycheck.setText("10");
+		RootPanel.get("settingsholder").add(tb_velocitycheck);
+		
+		RootPanel.get("settingsholder").add(new Label("Starve rate(1-10000)(Days): "));
+		tb_starve = new TextBox();
+		tb_starve.setText("200");
+		RootPanel.get("settingsholder").add(tb_starve);
 
 		RootPanel.get("settingsholder").add(new Label("Environment size(X,Y): "));
 		tb_width = new TextBox();

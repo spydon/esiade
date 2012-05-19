@@ -1,8 +1,6 @@
 package net.esiade.client;
 
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 
 import net.esiade.client.sprite.Individual;
 
@@ -68,22 +66,25 @@ public class EvolutionCore {
 	
 	/**
 	 * This is a general function for crossover, this function redirects to the appropriate crossover subfunction. The subfunctions implement common crossover operations, but applied on vectors instead of bits.
-	 * @param I1 The first individual
-	 * @param I2 The second individual
+	 * @param i1 The first individual
+	 * @param i2 The second individual
 	 */
-	public static void Crossover(Individual I1, Individual I2) {
-	if (Random.nextDouble() < cRate)
-		if (type == CType.ONEPOINT)
-			OnePointCrossover(I1, I2);
-		else if (type == CType.TWOPOINT)
-			TwoPointCrossover(I1, I2);
-		else if (type == CType.UNIFORM)
-			UniformCrossover(I1, I2);
-
-		Mutation(I1);
-		Mutation(I2);
-		I1.position = new Vector2D(Esiade.WIDTH-I1.getWidth(),Esiade.HEIGHT-I1.getHeight());
-		I2.position = new Vector2D(Esiade.WIDTH-I2.getWidth(),Esiade.HEIGHT-I2.getHeight());
+	public static void Crossover(Individual i1, Individual i2) {
+		if (Random.nextDouble() < cRate && 
+				i1.getReproductionLimit() <= i1.getFood() && 
+				i2.getReproductionLimit() <= i2.getFood()) {
+			if (type == CType.ONEPOINT)
+				OnePointCrossover(i1, i2);
+			else if (type == CType.TWOPOINT)
+				TwoPointCrossover(i1, i2);
+			else if (type == CType.UNIFORM)
+				UniformCrossover(i1, i2);
+	
+			Mutation(i1);
+			Mutation(i2);
+			i1.position = new Vector2D(Esiade.WIDTH-i1.getWidth(),Esiade.HEIGHT-i1.getHeight());
+			i2.position = new Vector2D(Esiade.WIDTH-i2.getWidth(),Esiade.HEIGHT-i2.getHeight());
+		}
 	}
 
 	/**

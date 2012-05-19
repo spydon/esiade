@@ -9,6 +9,7 @@ import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
 import net.esiade.client.sprite.Obstacle;
 
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -99,21 +100,21 @@ public class GraphicsCore {
 		
 		for(Individual i : individuals) {
 			i.updatePos();
+			if(day%i.getStarveRate()==0)
+				i.starve();
+			if(i.getFood() <= 0)
+				individuals.remove(i);
 			i.draw(contextBuffer);
 		}
+		
+		if(Random.nextDouble() <= Food.spawnRate)
+			foods.add(new Food(new Vector2D(WIDTH, HEIGHT)));
 		
 		for(Food f : foods)
 			f.draw(contextBuffer);
 		
 		for(Obstacle o : obstacles)
 			o.draw(contextBuffer);
-		
-		if(day%100==0)
-			for(Individual i : individuals) {
-				i.starve();
-				if(i.getHunger() <= 0)
-					individuals.remove(i);
-			}
 		
 		updateStatistics();
 	    context.drawImage(contextBuffer.getCanvas(), 0, 0);

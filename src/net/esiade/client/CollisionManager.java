@@ -57,7 +57,11 @@ public class CollisionManager {
 			
 			for(Food f : foods) {
 				if(isCollision(i, f)) {
-					i.eat();
+					if(i.eat()) {
+						Individual i2 = i.clone();
+						i2.position = new Vector2D(WIDTH, HEIGHT);
+						individuals.add(i2);
+					}
 					foods.remove(f);
 				}
 			}
