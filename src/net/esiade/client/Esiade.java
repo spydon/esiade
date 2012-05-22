@@ -27,7 +27,8 @@ public class Esiade implements EntryPoint {
     private CollisionManager collisionManager;
     private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
-    				tb_maptrust, tb_starve, tb_foodspawn, tb_selfrepr, tb_foodrepr;
+    				tb_maptrust, tb_starve, tb_foodspawn, tb_selfrepr, tb_foodrepr,
+    				tb_scalespeed;
     private ListBox lb_crossover;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -48,20 +49,23 @@ public class Esiade implements EntryPoint {
 		int numInd = (int)getNumber(tb_ind.getText());
 		int numFood = (int)getNumber(tb_food.getText());
 		int numObs = (int)getNumber(tb_obs.getText());
+		double scaleSpeed = getNumber(tb_scalespeed.getText());
 		RootPanel.get("settingsholder").clear();
 		
+		double jumpLength = scaleSpeed*Math.sqrt((WIDTH/EvolutionCore.WIDTH)*(HEIGHT/EvolutionCore.HEIGHT));
+		
 		for(int x = 0; x < numInd; x++)
-			individuals.add(new Individual(new Vector2D(WIDTH,HEIGHT), new Vector2D(), EvolutionCore.getRandomGenome(), 
+			individuals.add(new Individual(new Vector2D(WIDTH,HEIGHT), new Vector2D(jumpLength), EvolutionCore.getRandomGenome(jumpLength), 
 											(int)getNumber(tb_velocitycheck.getText()), getNumber(tb_maptrust.getText()), 
 											(int)getNumber(tb_starve.getText()), (int)getNumber(tb_selfrepr.getText()), 
-											(int)getNumber(tb_foodrepr.getText())));
+											(int)getNumber(tb_foodrepr.getText()), jumpLength, 1));
 		
 		for(int x = 0; x < numFood; x++)
 			foods.add(new Food(new Vector2D(WIDTH,HEIGHT)));
 
 		for(int x = 0; x < numObs; x++)
 			obstacles.add(new Obstacle(new Vector2D(WIDTH,HEIGHT)));
-
+		
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
 		new GraphicsCore(individuals, obstacles, foods, collisionManager);
 	}
@@ -112,9 +116,11 @@ public class Esiade implements EntryPoint {
 		tb_selfrepr.setText("100");
 		RootPanel.get("settingsholder").add(tb_selfrepr);
 		
-		RootPanel.get("settingsholder").add(new Label("# of Obstacles: "));
+		RootPanel.get("settingsholder").add(new Label("# of Obstacles: (Disabled)"));
 		tb_obs = new TextBox();
 		tb_obs.setText("0");
+		tb_obs.setReadOnly(true);
+		tb_obs.setEnabled(false);
 		RootPanel.get("settingsholder").add(tb_obs);
 		
 		RootPanel.get("settingsholder").add(new Label("Mutationrate(0.0-1.0): "));
@@ -136,6 +142,11 @@ public class Esiade implements EntryPoint {
 		tb_velocitycheck = new TextBox();
 		tb_velocitycheck.setText("10");
 		RootPanel.get("settingsholder").add(tb_velocitycheck);
+		
+		RootPanel.get("settingsholder").add(new Label("Scale maxspeed x*(length of 1 square): "));
+		tb_scalespeed = new TextBox();
+		tb_scalespeed.setText("0.9");
+		RootPanel.get("settingsholder").add(tb_scalespeed);
 		
 		RootPanel.get("settingsholder").add(new Label("Starve rate(1-10000)(Days): "));
 		tb_starve = new TextBox();

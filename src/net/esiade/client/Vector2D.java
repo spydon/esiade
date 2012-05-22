@@ -1,6 +1,8 @@
 package net.esiade.client;
 
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
  
 public class Vector2D {
  
@@ -10,6 +12,11 @@ public class Vector2D {
     public Vector2D() {
     	x = (Random.nextInt(2)==1 ? 1 : -1)*Random.nextDouble();
         y = (Random.nextInt(2)==1 ? 1 : -1)*Random.nextDouble();
+    }
+    
+    public Vector2D(double k) {
+    	x = k*(Random.nextInt(2)==1 ? 1 : -1)*Random.nextDouble();
+        y = k*(Random.nextInt(2)==1 ? 1 : -1)*Random.nextDouble();
     }
     
     public Vector2D(int width, int height) {
@@ -105,12 +112,8 @@ public class Vector2D {
      * @returns The length as a int.
      */
     public double length() {
-//        double len = (x*x)+(y*y);
-//		RootPanel.get().add(new Label("Bla " + len));
- //       return len;
-//		WTFBBQ BUGG! Varför får man inte göra simpel aritmetik?
-       return 0;
-        //return Math.sqrt(len);
+        double len = (x*x)+(y*y);
+        return Math.sqrt(len);
     }
  
     /**

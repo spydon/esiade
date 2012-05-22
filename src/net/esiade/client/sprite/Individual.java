@@ -1,26 +1,36 @@
 package net.esiade.client.sprite;
 
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 
 import net.esiade.client.Esiade;
 import net.esiade.client.EvolutionCore;
 import net.esiade.client.Vector2D;
 
 
-public class Individual extends MovingSprite {
+public class Individual extends MovingSprite implements ClickHandler {
 
 	private int food = 10;
+	private int generation;
 	private int veloCheck;
 	private int counter = 0;
 	private double mapTrust;
 	private int starveRate;
 	private int selfReproductionLimit;
 	private int reproductionLimit;
+	private double jumpLength;
 	public Vector2D[][] genome;
 	
 	public Individual(Vector2D position, Vector2D velocity, Vector2D[][] genome, 
-					int veloCheck, double mapTrust,	int starveRate, 
-					int selfReproductionLimit, int reproductionLimit) {
+					int veloCheck, double mapTrust,	int starveRate,
+					int selfReproductionLimit, int reproductionLimit, double jumpLength,
+					int generation) {
 		super("./individual.png", position, velocity);
 		this.velocity = genome[(int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH)]
 							[(int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT)];
@@ -29,7 +39,9 @@ public class Individual extends MovingSprite {
 		this.starveRate = starveRate;
 		this.selfReproductionLimit = selfReproductionLimit;
 		this.reproductionLimit = reproductionLimit;
+		this.jumpLength = jumpLength;
 		this.genome = genome;
+		this.generation = generation;
 	}
 	
 	public void updatePos() {
@@ -40,7 +52,7 @@ public class Individual extends MovingSprite {
 				velocity = genome[(int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH)]
 								[(int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT)];
 			else
-				velocity = new Vector2D();
+				velocity = new Vector2D(jumpLength);
 			counter = 0;
 //		} else if(position.x == 0 && position.y == y){
 //			velocity = new Vector2D();
@@ -59,7 +71,9 @@ public class Individual extends MovingSprite {
 	}
 	
 	public Individual clone() {
-		return new Individual(position, velocity, genome, veloCheck, mapTrust, starveRate, selfReproductionLimit, reproductionLimit);
+		return new Individual(position, velocity, genome, veloCheck, 
+							mapTrust, starveRate, selfReproductionLimit, 
+							reproductionLimit, jumpLength, generation++);
 	}
 	
 	public int getFood() {
@@ -78,4 +92,11 @@ public class Individual extends MovingSprite {
 		return starveRate;
 	}
 
+	@Override
+	public void onClick(ClickEvent event) {
+		// TODO Auto-generated method stub
+    	DialogBox db = new DialogBox();
+    	db.add(new HTML("Food: " + food));
+    	db.show();
+	}
 }

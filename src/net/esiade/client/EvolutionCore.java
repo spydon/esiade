@@ -38,13 +38,11 @@ public class EvolutionCore {
 	/**
 	 * @return This function returns a genome with all vectors set at random.
 	 */
-	public static Vector2D[][] getRandomGenome() {
+	public static Vector2D[][] getRandomGenome(double k) {
 		Vector2D[][] genome = new Vector2D[WIDTH][HEIGHT];
 		for (int x = 0;x < WIDTH;x++)
-			for (int y = 0; y < HEIGHT;y++) {
-				genome[x][y] = new Vector2D();
-				//RootPanel.get().add(new Label("" + genome[x][y]));
-			}
+			for (int y = 0; y < HEIGHT;y++)
+				genome[x][y] = new Vector2D(k);
 		return genome;
 	}
 
@@ -133,9 +131,7 @@ public class EvolutionCore {
 			for(int x=0;x<WIDTH;x++)
 				if (Random.nextDouble() > 0.5)
 					SwitchVectors(I1, I2, x, y);
-	}
-	
-	
+	}	
 	
 	/**
 	 * This function will change a vector to a random new vector, with the probability set as mutation rate, see mRate.
