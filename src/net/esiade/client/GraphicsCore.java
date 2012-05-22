@@ -14,9 +14,11 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import java.util.HashMap;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
@@ -26,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
  *
  */
 public class GraphicsCore {
+	private Timer timer;
 	private Canvas canvas, canvasBuffer;
 	private Context2d context, contextBuffer;
 	public static int WIDTH, HEIGHT;
@@ -38,12 +41,14 @@ public class GraphicsCore {
 	private ArrayList<Poisson> poissons;
     private CollisionManager collisionManager;
     private Label l_day, l_ind, l_food, l_obs;
+    private HashMap<String, Widget> state;
 
 	public GraphicsCore(ArrayList<Individual> individuals,
 						ArrayList<Obstacle> obstacles,
 						ArrayList<Food> foods,
 						ArrayList<Poisson> poissons,
-						CollisionManager collisionManager) {
+						CollisionManager collisionManager, 
+						HashMap<String, Widget> state) {
 		GraphicsCore.WIDTH = Esiade.WIDTH;
 		GraphicsCore.HEIGHT = Esiade.HEIGHT;
 		this.individuals = individuals;
@@ -51,6 +56,7 @@ public class GraphicsCore {
 		this.foods = foods;
 		this.poissons = poissons;
 		this.collisionManager = collisionManager;
+		this.state = state;
 		
 		l_day = new Label("Day: " + day);
 		l_ind = new Label("Alive individuals: " + individuals.size());
@@ -83,9 +89,23 @@ public class GraphicsCore {
 				StatisticsCore.individualResult(individuals.get(Random.nextInt(individuals.size())));
 			}
 		});
+		
+		Button settings = new Button("<- Settings");
+		settings.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				timer.cancel();
+				RootPanel.get("canvasholder").clear();
+				RootPanel.get("settingsholder").clear();
+				RootPanel.get("statisticsholder").clear();
+				RootPanel.get().clear();
+				new Esiade(getState());
+			}
+		});
 
 		RootPanel.get("canvasholder").add(canvas);
 		
+		RootPanel.get("statisticsholder").add(settings);
 		RootPanel.get("statisticsholder").add(randomInd);
 		RootPanel.get("statisticsholder").add(l_day);
 		RootPanel.get("statisticsholder").add(l_ind);
@@ -93,11 +113,14 @@ public class GraphicsCore {
 		RootPanel.get("statisticsholder").add(l_obs);
 
 		onModuleLoad();
-
+	}
+	
+	public HashMap<String, Widget> getState() {
+		return state;
 	}
 	
 	public void onModuleLoad() {
-	    final Timer timer = new Timer() {
+	    timer = new Timer() {
 	        @Override
 	        public void run() {
 	          if(individuals.size() == 0)

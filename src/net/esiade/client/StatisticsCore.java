@@ -15,9 +15,8 @@ public class StatisticsCore {
 
 	public static void individualResult(Individual i) {
 		db = new DialogBox();
-		VerticalPanel vp = new VerticalPanel();
-		vp.add(new Label("Generation: " + i.getGeneration()));
-		vp.add(new Label("Food: " + i.getFood()));
+		//VerticalPanel vp = new VerticalPanel();
+		db.setHTML("Generation: " + i.getGeneration() + "</br>Food: " + i.getFood());
 		Button close = new Button("Close");
 		close.addClickHandler(new ClickHandler() {
 			@Override
@@ -25,7 +24,7 @@ public class StatisticsCore {
 				db.hide();
 			}
 		});
-		db.add(vp);
+		//db.add(vp);
 		db.add(close);
 		db.center();
 		db.show();

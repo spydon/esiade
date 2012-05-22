@@ -16,7 +16,7 @@ import net.esiade.client.Vector2D;
 
 public class Individual extends MovingSprite {
 
-	private int food = 10;
+	private int food;
 	private int generation;
 	private int veloCheck;
 	private int counter = 0;
@@ -39,6 +39,7 @@ public class Individual extends MovingSprite {
 		this.starveRate = starveRate;
 		this.selfReproductionLimit = selfReproductionLimit;
 		this.reproductionLimit = reproductionLimit;
+		this.food = reproductionLimit;
 		this.jumpLength = jumpLength;
 		this.genome = genome;
 		this.generation = generation;
@@ -90,6 +91,10 @@ public class Individual extends MovingSprite {
 
 	public void starve() {
 		food--;
+	}
+	
+	public void resetFood() {
+		food = reproductionLimit;
 	}
 
 	public int getStarveRate() {
