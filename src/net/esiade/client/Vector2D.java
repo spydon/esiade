@@ -1,8 +1,9 @@
 package net.esiade.client;
 
+
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
+//import com.google.gwt.user.client.ui.Label;
+//import com.google.gwt.user.client.ui.RootPanel;
  
 public class Vector2D {
  
