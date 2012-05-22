@@ -82,6 +82,8 @@ public class EvolutionCore {
 			Mutation(i2);
 			i1.position = new Vector2D(Esiade.WIDTH-i1.getWidth(),Esiade.HEIGHT-i1.getHeight());
 			i2.position = new Vector2D(Esiade.WIDTH-i2.getWidth(),Esiade.HEIGHT-i2.getHeight());
+			i1.increaseGen();
+			i2.increaseGen();
 		}
 	}
 

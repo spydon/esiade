@@ -10,6 +10,7 @@ import net.esiade.client.sprite.Obstacle;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -24,11 +25,12 @@ public class Esiade implements EntryPoint {
     private ArrayList<Individual> individuals = new ArrayList<Individual>(0);
     private ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>(0);
     private ArrayList<Food> foods = new ArrayList<Food>(0);
+    private ArrayList<Poisson> poissons = new ArrayList<Poisson>(0);
     private CollisionManager collisionManager;
     private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
     				tb_maptrust, tb_starve, tb_foodspawn, tb_selfrepr, tb_foodrepr,
-    				tb_scalespeed;
+    				tb_scalespeed, tb_poisson;
     private ListBox lb_crossover;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -49,9 +51,13 @@ public class Esiade implements EntryPoint {
 		int numInd = (int)getNumber(tb_ind.getText());
 		int numFood = (int)getNumber(tb_food.getText());
 		int numObs = (int)getNumber(tb_obs.getText());
+		int numPoisson = (int)getNumber(tb_poisson.getText());
 		double scaleSpeed = getNumber(tb_scalespeed.getText());
 		RootPanel.get("settingsholder").clear();
 		
+		for(int x = 0; x < numPoisson; x++)
+			poissons.add(new Poisson(Random.nextInt(), new Vector2D(WIDTH, HEIGHT)));
+			
 		double jumpLength = scaleSpeed*Math.sqrt((WIDTH/EvolutionCore.WIDTH)*(HEIGHT/EvolutionCore.HEIGHT));
 		
 		for(int x = 0; x < numInd; x++)
@@ -61,13 +67,13 @@ public class Esiade implements EntryPoint {
 											(int)getNumber(tb_foodrepr.getText()), jumpLength, 1));
 		
 		for(int x = 0; x < numFood; x++)
-			foods.add(new Food(new Vector2D(WIDTH,HEIGHT)));
+			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
 
 		for(int x = 0; x < numObs; x++)
 			obstacles.add(new Obstacle(new Vector2D(WIDTH,HEIGHT)));
 		
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
-		new GraphicsCore(individuals, obstacles, foods, collisionManager);
+		new GraphicsCore(individuals, obstacles, foods, poissons, collisionManager);
 	}
 	
 	private double getNumber(String parse) {
@@ -101,7 +107,12 @@ public class Esiade implements EntryPoint {
 		tb_food.setText("20");
 		RootPanel.get("settingsholder").add(tb_food);
 		
-		RootPanel.get("settingsholder").add(new Label("Food spawnrate(0.0-1.0): "));
+		RootPanel.get("settingsholder").add(new Label("# of Poisson distributions: "));
+		tb_poisson = new TextBox();
+		tb_poisson.setText("3");
+		RootPanel.get("settingsholder").add(tb_poisson);
+		
+		RootPanel.get("settingsholder").add(new Label("Food spawnrate per poisson(0.0-1.0): "));
 		tb_foodspawn = new TextBox();
 		tb_foodspawn.setText("0.1");
 		RootPanel.get("settingsholder").add(tb_foodspawn);

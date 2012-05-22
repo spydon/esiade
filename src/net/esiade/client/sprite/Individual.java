@@ -14,7 +14,7 @@ import net.esiade.client.EvolutionCore;
 import net.esiade.client.Vector2D;
 
 
-public class Individual extends MovingSprite implements ClickHandler {
+public class Individual extends MovingSprite {
 
 	private int food = 10;
 	private int generation;
@@ -73,11 +73,15 @@ public class Individual extends MovingSprite implements ClickHandler {
 	public Individual clone() {
 		return new Individual(position, velocity, genome, veloCheck, 
 							mapTrust, starveRate, selfReproductionLimit, 
-							reproductionLimit, jumpLength, generation++);
+							reproductionLimit, jumpLength, generation);
 	}
 	
 	public int getFood() {
 		return food;
+	}
+	
+	public int getGeneration() {
+		return generation;
 	}
 	
 	public int getReproductionLimit() {
@@ -92,11 +96,7 @@ public class Individual extends MovingSprite implements ClickHandler {
 		return starveRate;
 	}
 
-	@Override
-	public void onClick(ClickEvent event) {
-		// TODO Auto-generated method stub
-    	DialogBox db = new DialogBox();
-    	db.add(new HTML("Food: " + food));
-    	db.show();
+	public void increaseGen() {
+		generation++;
 	}
 }

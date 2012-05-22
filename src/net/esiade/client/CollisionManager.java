@@ -59,6 +59,7 @@ public class CollisionManager {
 				if(isCollision(i, f)) {
 					if(i.eat()) {
 						Individual i2 = i.clone();
+						i2.increaseGen();
 						i2.position = new Vector2D(WIDTH, HEIGHT);
 						individuals.add(i2);
 					}

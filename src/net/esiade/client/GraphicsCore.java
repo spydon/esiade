@@ -11,11 +11,14 @@ import net.esiade.client.sprite.Obstacle;
 
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 
 /**
@@ -32,18 +35,21 @@ public class GraphicsCore {
     private ArrayList<Individual> individuals;
     private ArrayList<Obstacle> obstacles;
     private ArrayList<Food> foods;
+	private ArrayList<Poisson> poissons;
     private CollisionManager collisionManager;
     private Label l_day, l_ind, l_food, l_obs;
 
 	public GraphicsCore(ArrayList<Individual> individuals,
 						ArrayList<Obstacle> obstacles,
 						ArrayList<Food> foods,
+						ArrayList<Poisson> poissons,
 						CollisionManager collisionManager) {
 		GraphicsCore.WIDTH = Esiade.WIDTH;
 		GraphicsCore.HEIGHT = Esiade.HEIGHT;
 		this.individuals = individuals;
 		this.obstacles = obstacles;
 		this.foods = foods;
+		this.poissons = poissons;
 		this.collisionManager = collisionManager;
 		
 		l_day = new Label("Day: " + day);
@@ -68,9 +74,19 @@ public class GraphicsCore {
 		context.setFillStyle(REDRAW_COLOR);
 		context.fillRect(0, 0, WIDTH, HEIGHT);
 		contextBuffer = canvasBuffer.getContext2d();
+		
+		Button randomInd = new Button("Random individual stats");
+		randomInd.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ArrayList<Individual> individuals = getIndividuals();
+				StatisticsCore.individualResult(individuals.get(Random.nextInt(individuals.size())));
+			}
+		});
 
 		RootPanel.get("canvasholder").add(canvas);
 		
+		RootPanel.get("statisticsholder").add(randomInd);
 		RootPanel.get("statisticsholder").add(l_day);
 		RootPanel.get("statisticsholder").add(l_ind);
 		RootPanel.get("statisticsholder").add(l_food);
@@ -92,6 +108,10 @@ public class GraphicsCore {
 	      timer.scheduleRepeating(REFRESH_RATE);
 	}
 	
+	public ArrayList<Individual> getIndividuals() {
+		return individuals;
+	}
+	
 	private void doUpdate() {
 		day++;
 		contextBuffer.setFillStyle(CssColor.make("GREEN"));
@@ -102,13 +122,16 @@ public class GraphicsCore {
 			i.updatePos();
 			if(day%i.getStarveRate()==0)
 				i.starve();
-			if(i.getFood() <= 0)
+			if(i.getFood() <= 0) {
+				if(individuals.size()==1)
+					StatisticsCore.individualResult(i);
 				individuals.remove(i);
+			}
 			i.draw(contextBuffer);
 		}
 		
 		if(Random.nextDouble() <= Food.spawnRate)
-			foods.add(new Food(new Vector2D(WIDTH, HEIGHT)));
+			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
 		
 		for(Food f : foods)
 			f.draw(contextBuffer);
