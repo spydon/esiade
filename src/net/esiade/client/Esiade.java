@@ -30,7 +30,7 @@ public class Esiade implements EntryPoint {
     private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
     				tb_maptrust, tb_starve, tb_foodspawn, tb_selfrepr, tb_foodrepr,
-    				tb_scalespeed, tb_poisson;
+    				tb_scalespeed, tb_poisson, tb_lambda;
     private ListBox lb_crossover;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -52,11 +52,12 @@ public class Esiade implements EntryPoint {
 		int numFood = (int)getNumber(tb_food.getText());
 		int numObs = (int)getNumber(tb_obs.getText());
 		int numPoisson = (int)getNumber(tb_poisson.getText());
+		int lambda = (int)getNumber(tb_lambda.getText());
 		double scaleSpeed = getNumber(tb_scalespeed.getText());
 		RootPanel.get("settingsholder").clear();
 		
 		for(int x = 0; x < numPoisson; x++)
-			poissons.add(new Poisson(Random.nextInt(), new Vector2D(WIDTH, HEIGHT)));
+			poissons.add(new Poisson(lambda, new Vector2D(WIDTH, HEIGHT)));
 			
 		double jumpLength = scaleSpeed*Math.sqrt((WIDTH/EvolutionCore.WIDTH)*(HEIGHT/EvolutionCore.HEIGHT));
 		
@@ -111,6 +112,11 @@ public class Esiade implements EntryPoint {
 		tb_poisson = new TextBox();
 		tb_poisson.setText("3");
 		RootPanel.get("settingsholder").add(tb_poisson);
+		
+		RootPanel.get("settingsholder").add(new Label("Lambda for Poisson: "));
+		tb_lambda = new TextBox();
+		tb_lambda.setText("10");
+		RootPanel.get("settingsholder").add(tb_lambda);
 		
 		RootPanel.get("settingsholder").add(new Label("Food spawnrate per poisson(0.0-1.0): "));
 		tb_foodspawn = new TextBox();
