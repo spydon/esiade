@@ -1,0 +1,119 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{fullpage}
+\usepackage[british]{babel}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm} \newtheorem{theorem}{Theorem}
+\usepackage{color}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{subfig}
+\lstset{% parameters for all code listings
+	language=Python,
+	frame=single,
+	basicstyle=\small,  % nothing smaller than \footnotesize, please
+	tabsize=2,
+	numbers=left,
+	framexleftmargin=2em,  % extend frame to include line numbers
+	% xrightmargin=2em,  % extra space to fit 79 characters
+	breaklines=true,
+	breakatwhitespace=true,
+	prebreak={/},
+	captionpos=b,
+	columns=fullflexible,
+	escapeinside={\#*}{\^^M}
+}
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
+\DefineVerbatimEnvironment{example}{Verbatim}{fontsize=\small}
+
+\usepackage{tikz} \usetikzlibrary{trees}
+\usepackage{hyperref}  % should always be the last package
+
+% useful colours (use sparingly!):
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\red}[1]{{\color{red}#1}}
+
+% useful wrappers for algorithmic/Python notation:
+\newcommand{\length}[1]{\text{len}(#1)}
+\newcommand{\twodots}{\mathinner{\ldotp\ldotp}}  % taken from clrscode3e.sty
+\newcommand{\Oh}[1]{\mathcal{O}\left(#1\right)}
+
+% useful (wrappers for) math symbols:
+\newcommand{\Cardinality}[1]{\left\lvert#1\right\rvert}
+%\newcommand{\Cardinality}[1]{\##1}
+\newcommand{\Ceiling}[1]{\left\lceil#1\right\rceil}
+\newcommand{\Floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Iff}{\Leftrightarrow}
+\newcommand{\Implies}{\Rightarrow}
+\newcommand{\Intersect}{\cap}
+\newcommand{\Sequence}[1]{\left[#1\right]}
+\newcommand{\Set}[1]{\left\{#1\right\}}
+\newcommand{\SetComp}[2]{\Set{#1\SuchThat#2}}
+\newcommand{\SuchThat}{\mid}
+\newcommand{\Tuple}[1]{\langle#1\rangle}
+\newcommand{\Union}{\cup}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
+
+
+\title{\textbf{Evolutionary Simulator In A Dynamic Environment}}
+
+\author{Jonathan Sharyari \and Lukas Klingsbo}  % replace by your name(s)
+
+%\date{Month Day, Year}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Abstract}
+
+\section{Introduction}
+Genetic algorithms (GAs) are a common tool to find solutions to complex problems, often with high dimensionality. Although much research has been done on the subject, this research has to some extent focused on problems in a stationary environment. Since in a dynamic environment, the fitness function changes over time a traditional GA is not very suited for solving dynamic problems, as it is likely that the population will quickly converge and not be able to adapt when the fitness function changes. [referens?]
+
+Several approaches have been proposed in order to allow GAs to maintain the population diversity, two common methods are \emph{random immigrants} and \emph{triggered hypermutation} [1][2].
+
+\section{Environment}
+Our test environment consists of a simple map, containing obstacles, food and enemies, and is randomely initialized. The goal of the population is to find paths around the obstacles, and learn to avoid areas where enemies reside. The element of food is added in order to encourage a higher degree of exploration by the population.
+
+A dynamic environment is created by changing the positions of the elements in the map. This can be done in many ways, and we settle for three different methods of changing the map.
+
+\begin{itemize}
+\item
+
+[GE DEN ETT NAMN - Shotgun??] - The map is reinitialized, changing the positions of obstacles and enemies. This must be done rarely, as to give the population the time to readapt.
+\item
+
+[GE DEN ETT NAMN - moving?] - Small changes are done, but fairly often. The optimum after a change will lie close to the earlier optimum.
+\item
+
+[GE DEN ETT NAMN - seasons?] - Like in SHOTGUN??, the changes are large and rare, but the number of maps is finite and periodic.
+\end{itemize}
+
+We anticipate that different dynamic methods (see below) will have the best performance on the different types of map.
+
+\section{Suggested Dynamic Methods}
+\subsection{Mutation}
+The concept of mutation is critical for genetic algorithms, as it is through mutation a genetic algorithm maintains its diversity. As the problem of training in a dynamic environment is to avoid or overcome early convergence, it is tempting to try training with a higher degree of mutation than commonly used in static environments. This is a very simple concept, but the results obtained in [1] show that the pef
+\subsection{Triggered Hypermutation}
+
+
+\subsection{Immigrants}
+
+\section{Gene representation}
+\section{Discussion}
+
+\section{Conclusions}
+
+\section{references}
+[1] H. G. Cobb, J. J. Grefenstette (1993) Genetic Algorithms for Tracking Changing Environments, Proceedings of the 5th International Conference on Genetic Algorithms
+[2] A. Simões, E. Costa (2002) Using Genetic Algorithms to Deal with Dynamic Environments: A Comparative Study of Several Approaches Based on Promoting Diversity, GECCO '02 Proceedings of the Genetic and Evolutionary Computation Conference
+
+[3]
+
+\end{document}
+
