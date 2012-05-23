@@ -11,7 +11,6 @@ import net.esiade.client.Vector2D;
  * @author Lukas Klingsbo
  * 
  */
-
 public class Individual extends MovingSprite implements Comparable<Individual> {
 	private int food;
 	private int generation;
