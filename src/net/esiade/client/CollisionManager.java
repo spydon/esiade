@@ -60,8 +60,10 @@ public class CollisionManager {
 					if(i.eat()) {
 						Individual i2 = i.clone();
 						i2.increaseGen();
-						i2.position = new Vector2D(WIDTH, HEIGHT);
+						//i2.position = new Vector2D(WIDTH, HEIGHT);
+						i.resetFood();
 						i2.resetFood();
+						i2.position.add(new Vector2D(10));
 						individuals.add(i2);
 					}
 					foods.remove(f);

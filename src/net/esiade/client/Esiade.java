@@ -32,8 +32,8 @@ public class Esiade implements EntryPoint {
     private HashMap<String, Widget> state = new HashMap<String, Widget>(0);
     private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
-    				tb_maptrust, tb_starve, tb_foodspawn, tb_selfrepr, tb_foodrepr,
-    				tb_scalespeed, tb_poisson, tb_lambda;
+    				tb_maptrust, tb_starve, tb_foodspawn, tb_foodstart, tb_selfrepr, 
+    				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda;
     private ListBox lb_crossover, lb_environment;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -59,6 +59,7 @@ public class Esiade implements EntryPoint {
 		tb_maptrust = (TextBox)state.get("tb_maptrust");
 		tb_starve = (TextBox)state.get("tb_starve");
 		tb_foodspawn = (TextBox)state.get("tb_foodspawn");
+		tb_foodstart = (TextBox)state.get("tb_foodstart");
 		tb_selfrepr = (TextBox)state.get("tb_selfrepr");
 		tb_foodrepr = (TextBox)state.get("tb_foodrepr");
 		tb_scalespeed = (TextBox)state.get("tb_scalespeed");
@@ -97,7 +98,8 @@ public class Esiade implements EntryPoint {
 			individuals.add(new Individual(new Vector2D(WIDTH,HEIGHT), new Vector2D(jumpLength), EvolutionCore.getRandomGenome(jumpLength), 
 											(int)getNumber(tb_velocitycheck.getText()), getNumber(tb_maptrust.getText()), 
 											(int)getNumber(tb_starve.getText()), (int)getNumber(tb_selfrepr.getText()), 
-											(int)getNumber(tb_foodrepr.getText()), jumpLength, 1));
+											(int)getNumber(tb_foodrepr.getText()), (int)getNumber(tb_foodstart.getText()),
+											jumpLength, 1));
 		
 		for(int x = 0; x < numFood; x++)
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
@@ -123,7 +125,8 @@ public class Esiade implements EntryPoint {
 		state.put("tb_velocitycheck", tb_velocitycheck); 
 		state.put("tb_maptrust", tb_maptrust); 
 		state.put("tb_starve", tb_starve); 
-		state.put("tb_foodspawn", tb_foodspawn); 
+		state.put("tb_foodspawn", tb_foodspawn);
+		state.put("tb_foodstart", tb_foodstart);
 		state.put("tb_selfrepr", tb_selfrepr); 
 		state.put("tb_foodrepr", tb_foodrepr); 
 		state.put("tb_scalespeed", tb_scalespeed); 
@@ -169,6 +172,9 @@ public class Esiade implements EntryPoint {
 		tb_foodspawn = new TextBox();
 		tb_foodspawn.setText("0.005");
 		
+		tb_foodstart = new TextBox();
+		tb_foodstart.setText("9");
+		
 		tb_foodrepr = new TextBox();
 		tb_foodrepr.setText("10");
 		
@@ -193,7 +199,7 @@ public class Esiade implements EntryPoint {
 		tb_velocitycheck.setText("10");
 		
 		tb_scalespeed = new TextBox();
-		tb_scalespeed.setText("0.7");
+		tb_scalespeed.setText("0.2");
 		
 		tb_starve = new TextBox();
 		tb_starve.setText("200");
@@ -225,18 +231,23 @@ public class Esiade implements EntryPoint {
 		lb_environment.addItem("Small changes");
 		lb_environment.addItem("Big changes");
 		lb_environment.addItem("Seasonal");
+		lb_environment.setEnabled(false);
+		
 		drawSettingsUI();
 		
 	}
 	
 	private void drawSettingsUI() {
-		RootPanel.get("settingsholder").add(new Label("# of Individuals: "));
+		RootPanel.get("settingsholder").add(new Label("# of start Individuals: "));
 		RootPanel.get("settingsholder").add(tb_ind);
 
-		RootPanel.get("settingsholder").add(new Label("# of Food: "));
+		RootPanel.get("settingsholder").add(new Label("# of start food: "));
 		RootPanel.get("settingsholder").add(tb_food);
+		
+		RootPanel.get("settingsholder").add(new Label("# of start food in individuals: "));
+		RootPanel.get("settingsholder").add(tb_foodstart);
 
-		RootPanel.get("settingsholder").add(new Label("# of Poisson distributions: "));
+		RootPanel.get("settingsholder").add(new Label("# of Poisson food distributions: "));
 		RootPanel.get("settingsholder").add(tb_poisson);
 
 		RootPanel.get("settingsholder").add(new Label("Lambda for Poisson: "));
