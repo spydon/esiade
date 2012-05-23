@@ -58,13 +58,7 @@ public class CollisionManager {
 			for(Food f : foods) {
 				if(isCollision(i, f)) {
 					if(i.eat()) {
-						Individual i2 = i.clone();
-						i2.increaseGen();
-						//i2.position = new Vector2D(WIDTH, HEIGHT);
-						i.resetFood();
-						i2.resetFood();
-						i2.position.add(new Vector2D(10));
-						individuals.add(i2);
+						individuals.add(EvolutionCore.SelfReproduction(i));
 					}
 					foods.remove(f);
 				}

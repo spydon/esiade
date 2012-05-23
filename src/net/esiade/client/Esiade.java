@@ -34,7 +34,7 @@ public class Esiade implements EntryPoint {
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
     				tb_maptrust, tb_starve, tb_foodspawn, tb_foodstart, tb_selfrepr, 
     				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda;
-    private ListBox lb_crossover, lb_environment;
+    private ListBox lb_reprtype, lb_crossover, lb_environment;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
 
@@ -65,6 +65,7 @@ public class Esiade implements EntryPoint {
 		tb_scalespeed = (TextBox)state.get("tb_scalespeed");
 		tb_poisson = (TextBox)state.get("tb_poisson");
 		tb_lambda = (TextBox)state.get("tb_lambda");
+		lb_reprtype = (ListBox)state.get("lb_reprtype");
 		lb_crossover = (ListBox)state.get("lb_crossover");
 		lb_environment = (ListBox)state.get("lb_environment");
 		drawSettingsUI();
@@ -131,7 +132,8 @@ public class Esiade implements EntryPoint {
 		state.put("tb_foodrepr", tb_foodrepr); 
 		state.put("tb_scalespeed", tb_scalespeed); 
 		state.put("tb_poisson", tb_poisson); 
-		state.put("tb_lambda", tb_lambda); 
+		state.put("tb_lambda", tb_lambda);
+		state.put("lb_reprtype", lb_reprtype); 
 		state.put("lb_crossover", lb_crossover); 
 		state.put("lb_environment", lb_environment); 
 	}
@@ -222,6 +224,10 @@ public class Esiade implements EntryPoint {
 		tb_matrix_y.setMaxLength(4);
 		tb_matrix_y.setWidth("30px");
 		
+		lb_reprtype = new ListBox();
+		lb_reprtype.addItem("Epoch based");
+		lb_reprtype.addItem("Collision based");
+		
 		lb_crossover = new ListBox();
 		lb_crossover.addItem("One-point");
 		lb_crossover.addItem("Two-point");
@@ -238,6 +244,9 @@ public class Esiade implements EntryPoint {
 	}
 	
 	private void drawSettingsUI() {
+		RootPanel.get("settingsholder").add(new Label("Reproduction type: "));
+		RootPanel.get("settingsholder").add(lb_reprtype);
+		
 		RootPanel.get("settingsholder").add(new Label("# of start Individuals: "));
 		RootPanel.get("settingsholder").add(tb_ind);
 

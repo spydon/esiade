@@ -88,6 +88,17 @@ public class EvolutionCore {
 			i2.increaseGen();
 		}
 	}
+	
+	public static Individual SelfReproduction(Individual i) {
+		Individual i2 = i.clone();
+		i2.increaseGen();
+		//i2.position = new Vector2D(WIDTH, HEIGHT);
+		i.resetFood();
+		i2.resetFood();
+		i2.position.add(new Vector2D(10));
+		Mutation(i2);
+		return i2;
+	}
 
 	/**
 	 * One point crossover. The two individuals will be modified to two new individuals, in a 1-point crossover fashion. 
