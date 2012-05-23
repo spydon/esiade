@@ -34,6 +34,8 @@ public class GraphicsCore {
 	public static int WIDTH, HEIGHT;
 	private final int REFRESH_RATE = 20;
 	private int day = 0;
+	private int epochLength;
+	private boolean isEpochBased;
 	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals;
     private ArrayList<Obstacle> obstacles;
@@ -48,6 +50,8 @@ public class GraphicsCore {
 						ArrayList<Food> foods,
 						ArrayList<Poisson> poissons,
 						CollisionManager collisionManager, 
+						int epochLength,
+						boolean isEpochBased,
 						HashMap<String, Widget> state) {
 		GraphicsCore.WIDTH = Esiade.WIDTH;
 		GraphicsCore.HEIGHT = Esiade.HEIGHT;
@@ -56,6 +60,8 @@ public class GraphicsCore {
 		this.foods = foods;
 		this.poissons = poissons;
 		this.collisionManager = collisionManager;
+		this.epochLength = epochLength;
+		this.isEpochBased = isEpochBased;
 		this.state = state;
 		
 		l_day = new Label("Day: " + day);
@@ -139,16 +145,21 @@ public class GraphicsCore {
 		day++;
 		contextBuffer.setFillStyle(CssColor.make("GREEN"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
-		collisionManager.checkCollision();
+		if(!isEpochBased)
+			collisionManager.checkCollision();
 		
 		for(Individual i : individuals) {
 			i.updatePos();
-			if(day%i.getStarveRate()==0)
-				i.starve();
-			if(i.getFood() <= 0) {
-				if(individuals.size()==1)
-					StatisticsCore.individualResult(i);
-				individuals.remove(i);
+			if(!isEpochBased) {
+				if(day%i.getStarveRate()==0)
+					i.starve();
+				if(i.getFood() <= 0) {
+					if(individuals.size()==1)
+						StatisticsCore.individualResult(i);
+					individuals.remove(i);
+				}
+			} else if (isEpochBased && day%epochLength==0) {
+				EvolutionCore.EpochReproduction(individuals);
 			}
 			i.draw(contextBuffer);
 		}

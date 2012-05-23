@@ -14,8 +14,8 @@ import net.esiade.client.sprite.Individual;
  *
  */
 public class EvolutionCore {
-	public static int WIDTH, HEIGHT;
-	private static double mRate, cRate;
+	public static int WIDTH, HEIGHT, elitism;
+	private static double mRate, cRate, chance;
 	private static CType type;
 	
 	/**
@@ -24,12 +24,15 @@ public class EvolutionCore {
 	 * @param mRate The mutation rate
 	 * @param cRate The crossover rate
 	 */
-	public EvolutionCore(int width, int height, double mRate, double cRate, CType type){
+	public EvolutionCore(int width, int height, double mRate, double cRate, CType type,
+						int elitism, double chance){
 		EvolutionCore.WIDTH = width;
 		EvolutionCore.HEIGHT = height;
 		EvolutionCore.mRate = mRate;
 		EvolutionCore.cRate = cRate;
 		EvolutionCore.type = type;
+		EvolutionCore.elitism = elitism;
+		EvolutionCore.chance = chance;
 	}
 
 	/**
@@ -94,32 +97,21 @@ public class EvolutionCore {
 		}
 	}
 	
-	public static ArrayList<Individual> EpochReproduction(
-			ArrayList<Individual> individuals, int elitism, double chance) {
+	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
 		ArrayList<Individual> elite = new ArrayList<Individual>(0);
-//		Individual first = individuals.get(0);
-//		individuals.remove(first);
-//		elite.add(first);
-//		for(Individual i : individuals) {
-//			for(Individual e : elite) {
-//				if(e.getFood() <= i.getFood()) {
-//					elite.add(i);
-//					if(elite.size() >= elitism)
-//						elite.remove(elite.size()-1);
-//					individuals.remove(i);
-//					break;
-//				}
-//			}
-//		}
-		
-//		if(!elite.contains(first))
-//			individuals.add(first);
-//		
-//		for(int x = 0; x<crossovers; x++)
 		Collections.sort(individuals);
 		for(int x = 0; x<elitism; x++) 
 			elite.add(individuals.get(x));
 			
+		for(Individual i : individuals)
+			for(Individual j : individuals)
+				if((!i.equals(j) && Random.nextDouble() < chance) || 
+						individuals.get(individuals.size()-1).equals(j)) {
+					Crossover(i, j);
+					individuals.remove(i);
+					individuals.remove(j);
+					break;
+				}
 			
 		return individuals;
 	}

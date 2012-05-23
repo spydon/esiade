@@ -9,6 +9,9 @@ import net.esiade.client.sprite.Obstacle;
 
 import com.google.gwt.core.client.EntryPoint;
 import java.util.HashMap;
+
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Random;
@@ -29,11 +32,12 @@ public class Esiade implements EntryPoint {
     private ArrayList<Food> foods = new ArrayList<Food>(0);
     private ArrayList<Poisson> poissons = new ArrayList<Poisson>(0);
     private CollisionManager collisionManager;
-    private HashMap<String, Widget> state = new HashMap<String, Widget>(0);
+    private HashMap<String, Widget> state;
     private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
     				tb_maptrust, tb_starve, tb_foodspawn, tb_foodstart, tb_selfrepr, 
-    				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda;
+    				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda, tb_elitism,
+    				tb_chance, tb_epochlength;
     private ListBox lb_reprtype, lb_crossover, lb_environment;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -65,6 +69,9 @@ public class Esiade implements EntryPoint {
 		tb_scalespeed = (TextBox)state.get("tb_scalespeed");
 		tb_poisson = (TextBox)state.get("tb_poisson");
 		tb_lambda = (TextBox)state.get("tb_lambda");
+		tb_elitism = (TextBox)state.get("tb_elitism");
+		tb_chance = (TextBox)state.get("tb_chance");
+		tb_epochlength = (TextBox)state.get("tb_epochlength");
 		lb_reprtype = (ListBox)state.get("lb_reprtype");
 		lb_crossover = (ListBox)state.get("lb_crossover");
 		lb_environment = (ListBox)state.get("lb_environment");
@@ -77,7 +84,8 @@ public class Esiade implements EntryPoint {
 	}
 	
 	private void run() {
-		new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())));
+		new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), 
+									getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())), (int)getNumber(tb_elitism.getText()), getNumber(tb_chance.getText()));
 		Esiade.WIDTH = (int)getNumber(tb_width.getText());
 		Esiade.HEIGHT = (int)getNumber(tb_height.getText());
 		Food.spawnRate = getNumber(tb_foodspawn.getText());
@@ -87,6 +95,8 @@ public class Esiade implements EntryPoint {
 		int numObs = (int)getNumber(tb_obs.getText());
 		int numPoisson = (int)getNumber(tb_poisson.getText());
 		int lambda = (int)getNumber(tb_lambda.getText());
+		int epochLength = (int)getNumber(tb_epochlength.getText());
+		boolean isEpochBased = lb_reprtype.getItemText(lb_reprtype.getSelectedIndex()).equals("Epoch based");
 		double scaleSpeed = getNumber(tb_scalespeed.getText());
 		RootPanel.get("settingsholder").clear();
 		
@@ -110,7 +120,7 @@ public class Esiade implements EntryPoint {
 		
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
 		saveState();
-		new GraphicsCore(individuals, obstacles, foods, poissons, collisionManager, state);
+		new GraphicsCore(individuals, obstacles, foods, poissons, collisionManager, epochLength, isEpochBased, state);
 	}
 	
 	private void saveState() {
@@ -133,6 +143,9 @@ public class Esiade implements EntryPoint {
 		state.put("tb_scalespeed", tb_scalespeed); 
 		state.put("tb_poisson", tb_poisson); 
 		state.put("tb_lambda", tb_lambda);
+		state.put("tb_elitism", tb_elitism);
+		state.put("tb_chance", tb_chance);
+		state.put("tb_epochlength", tb_epochlength);
 		state.put("lb_reprtype", lb_reprtype); 
 		state.put("lb_crossover", lb_crossover); 
 		state.put("lb_environment", lb_environment); 
@@ -205,6 +218,15 @@ public class Esiade implements EntryPoint {
 		
 		tb_starve = new TextBox();
 		tb_starve.setText("200");
+		
+		tb_elitism = new TextBox();
+		tb_elitism.setText("1");
+
+		tb_chance = new TextBox();
+		tb_chance.setText("0.2");
+
+		tb_epochlength = new TextBox();
+		tb_epochlength.setText("400");
 
 		tb_width = new TextBox();
 		tb_width.setText("500");
@@ -227,6 +249,30 @@ public class Esiade implements EntryPoint {
 		lb_reprtype = new ListBox();
 		lb_reprtype.addItem("Epoch based");
 		lb_reprtype.addItem("Collision based");
+		lb_reprtype.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				String selected = lb_reprtype.getItemText(lb_reprtype.getSelectedIndex());
+				if(selected.equals("Epoch based")) {
+    				tb_starve.setEnabled(false);
+    				tb_selfrepr.setEnabled(false); 
+    				tb_foodrepr.setEnabled(false);
+    				tb_elitism.setEnabled(true);
+    				tb_chance.setEnabled(true);
+    				tb_epochlength.setEnabled(true);
+				} else if(selected.equals("Collision based")) {
+    				tb_starve.setEnabled(true);
+    				tb_selfrepr.setEnabled(true); 
+    				tb_foodrepr.setEnabled(true);
+    				tb_elitism.setEnabled(false);
+    				tb_chance.setEnabled(false);
+    				tb_epochlength.setEnabled(false);    				
+				}
+			}
+		});
+		tb_starve.setEnabled(false);
+		tb_selfrepr.setEnabled(false); 
+		tb_foodrepr.setEnabled(false);
 		
 		lb_crossover = new ListBox();
 		lb_crossover.addItem("One-point");
@@ -291,6 +337,15 @@ public class Esiade implements EntryPoint {
 
 		RootPanel.get("settingsholder").add(new Label("Starve rate(1-10000)(Days): "));
 		RootPanel.get("settingsholder").add(tb_starve);
+		
+		RootPanel.get("settingsholder").add(new Label("Number elite individuals: "));
+		RootPanel.get("settingsholder").add(tb_elitism);
+		
+		RootPanel.get("settingsholder").add(new Label("Chance of doing crossover with individual x*numberInList: "));
+		RootPanel.get("settingsholder").add(tb_chance);
+		
+		RootPanel.get("settingsholder").add(new Label("How many days between reproduction: "));
+		RootPanel.get("settingsholder").add(tb_epochlength);
 
 		RootPanel.get("settingsholder").add(new Label("Environment size(X,Y): "));
 		RootPanel.get("settingsholder").add(tb_width);
