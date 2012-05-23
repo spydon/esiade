@@ -23,7 +23,7 @@ public class Poisson {
 	}
 	
 	public Vector2D getVector(){
-		return new Vector2D(position.x + getNumber()-lambda, position.y + getNumber()-lambda);	
+		return new Vector2D(position.x + 20*(getNumber()-lambda), position.y + 20*(getNumber()-lambda));	
 	}
 
 	public void changePosition(Vector2D move){

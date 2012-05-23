@@ -16,7 +16,7 @@
 	tabsize=2,
 	numbers=left,
 	framexleftmargin=2em,  % extend frame to include line numbers
-	% xrightmargin=2em,  % extra space to fit 79 characters
+	%xrightmargin=2em,  % extra space to fit 79 characters
 	breaklines=true,
 	breakatwhitespace=true,
 	prebreak={/},
@@ -83,28 +83,40 @@ Our test environment consists of a simple map, containing obstacles, food and en
 A dynamic environment is created by changing the positions of the elements in the map. This can be done in many ways, and we settle for three different methods of changing the map.
 
 \begin{itemize}
-\item
 
-[GE DEN ETT NAMN - Shotgun??] - The map is reinitialized, changing the positions of obstacles and enemies. This must be done rarely, as to give the population the time to readapt.
 \item
-
-[GE DEN ETT NAMN - moving?] - Small changes are done, but fairly often. The optimum after a change will lie close to the earlier optimum.
+Evolving map- Small changes are done, but fairly often. The optimum after a change will lie close to the earlier optimum.
 \item
-
-[GE DEN ETT NAMN - seasons?] - Like in SHOTGUN??, the changes are large and rare, but the number of maps is finite and periodic.
+Shotgun map - The map is reinitialized, changing the positions of obstacles and enemies. This must be done rarely, as to give the population the time to readapt.
+\item
+Seasonal map - similar to the shotgun map, changes are large and rare, but the number of maps is finite and periodic.
 \end{itemize}
 
 We anticipate that different dynamic methods (see below) will have the best performance on the different types of map.
 
 \section{Suggested Dynamic Methods}
-\subsection{Mutation}
+\subsection{Hypermutation}
 The concept of mutation is critical for genetic algorithms, as it is through mutation a genetic algorithm maintains its diversity. As the problem of training in a dynamic environment is to avoid or overcome early convergence, it is tempting to try training with a higher degree of mutation than commonly used in static environments. This is a very simple concept, but the results obtained in [1] show that the pef
-\subsection{Triggered Hypermutation}
 
+\subsection{Triggered Hypermutation}
+A higher mutation rate results in higher diversity as indicated above, but a high mutation rate makes it difficult to converge. The mutation rate is therefore generally kept low in standard GAs. The method of using a high mutation rate in a dynamic system might therefore lead to non-converging individuals.
+
+Triggered hypermutation is a proposed solution to this problem. The mutation rate in general is kept low, giving better convergence. When the system is altered in a way that decreases the fitness, the hypermutation stage is started and the mutation rate is temporarily increased giving the same effect as the method explained above.
 
 \subsection{Immigrants}
+Random immigrants and elitism-based immigrants use a different approach to maintain diversity. In these methods, some individuals with low fitness are removed and replaced with new individuals.
 
-\section{Gene representation}
+With random immigrants, these new individuals are randomely created (the same way individuals were initialized at the beginning).
+
+With elitism-based immigrants, the individuals with high fitness are remembered. When the total fitness decreases (potentially due to changes in the environment), individuals with low fitness are removed and individuals from this elite-set are reintroduced.
+
+\section{Genome representation}
+The behavior of an individual depends on its genome, which decides how it moves on the map. The genome is represented as a matrix of vector values where each position in the matrix represents a part of the map, and the vector stored at the position is the direction in which the individual will move.
+
+Consider a map of size $50m \times 50n$ and a matrix of size $m \times n$. Then every matrix position will represent a $50\times50$ square in the map. When the individual has a position inside that square, it's speed and direction will be given by the vector stored in that position of the matrix.
+
+%When performing a crossover operation, the matrix is instead treated as a list.
+
 \section{Discussion}
 
 \section{Conclusions}
