@@ -1,6 +1,11 @@
 package net.esiade.client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import net.esiade.client.sprite.Individual;
 
@@ -89,6 +94,36 @@ public class EvolutionCore {
 		}
 	}
 	
+	public static ArrayList<Individual> EpochReproduction(
+			ArrayList<Individual> individuals, int elitism, double chance) {
+		ArrayList<Individual> elite = new ArrayList<Individual>(0);
+//		Individual first = individuals.get(0);
+//		individuals.remove(first);
+//		elite.add(first);
+//		for(Individual i : individuals) {
+//			for(Individual e : elite) {
+//				if(e.getFood() <= i.getFood()) {
+//					elite.add(i);
+//					if(elite.size() >= elitism)
+//						elite.remove(elite.size()-1);
+//					individuals.remove(i);
+//					break;
+//				}
+//			}
+//		}
+		
+//		if(!elite.contains(first))
+//			individuals.add(first);
+//		
+//		for(int x = 0; x<crossovers; x++)
+		Collections.sort(individuals);
+		for(int x = 0; x<elitism; x++) 
+			elite.add(individuals.get(x));
+			
+			
+		return individuals;
+	}
+	
 	public static Individual SelfReproduction(Individual i) {
 		Individual i2 = i.clone();
 		i2.increaseGen();
@@ -131,7 +166,7 @@ public class EvolutionCore {
 				if (randomPoint2 >= 0){
 					SwitchVectors(I1, I2, x, y);
 					randomPoint2--;
-				} else {	
+				} else {
 					break;
 				}
 	}

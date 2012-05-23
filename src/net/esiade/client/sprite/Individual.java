@@ -7,7 +7,7 @@ import net.esiade.client.EvolutionCore;
 import net.esiade.client.Vector2D;
 
 
-public class Individual extends MovingSprite {
+public class Individual extends MovingSprite implements Comparable<Individual> {
 
 	private int food;
 	private int generation;
@@ -98,5 +98,10 @@ public class Individual extends MovingSprite {
 
 	public void increaseGen() {
 		generation++;
+	}
+
+	@Override
+	public int compareTo(Individual i) {
+		return i.getFood()-getFood();
 	}
 }
