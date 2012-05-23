@@ -13,19 +13,26 @@ public abstract class MovingSprite extends Sprite{
 		//RootPanel.get().add(dbgMsg);
 	}
 	
+	/**
+	 * Update the position to a new position with the vectors,	collisions have been taken care of.
+	 */
 	public void updatePos() {
-//		Update the position to a new position with the vectors, 
-//		collisions have been taken care of.
+
 		position.add(velocity);
 	}
 	
+	/**
+	 * If a sprite collides with the top or bottom border, set its velocity in that direction to 0. 
+	 */
 	public void verticalCollision() {
 //		What should happen to the vectors if there is a
 //		horizontal collision? Set the vectors to make the
 //		individual go sideways.
 		velocity.setY(0.0);
 	}
-	
+	/**
+	 * If a sprite collides with the left or right border, set its velocity in that direction to 0. 
+	 */
 	public void horizontalCollision() {
 //		What should happen to the vectors if there is a
 //		horizontal collision? Set the vectors to make the
@@ -33,6 +40,10 @@ public abstract class MovingSprite extends Sprite{
 		velocity.setX(0.0);
 	}
 	
+	/**
+	 * Get the speed of the sprite.
+	 * @return the speed of the sprite.
+	 */
 	public double getSpeed() {
 		return velocity.length();
 	}
