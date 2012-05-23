@@ -13,6 +13,11 @@ import net.esiade.client.sprite.Individual;
 public class StatisticsCore {
 	private static DialogBox db;
 
+
+	/**
+	 * This function creates a popup, showing the generation number and the amount of food in an individual.
+	 * @param i The individual for which to show statistics
+	 */
 	public static void individualResult(Individual i) {
 		db = new DialogBox();
 		//VerticalPanel vp = new VerticalPanel();

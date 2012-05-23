@@ -11,18 +11,7 @@ import net.esiade.client.Vector2D;
  * @author Lukas Klingsbo
  * 
  */
-/**
- * @author jonathan
- *
- */
-/**
- * @author jonathan
- *
- */
-/**
- * @author jonathan
- *
- */
+
 public class Individual extends MovingSprite {
 
 	private int food;

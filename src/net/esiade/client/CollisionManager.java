@@ -17,6 +17,13 @@ public class CollisionManager {
 	private Label dbgMsg = new Label();
 	private final int WIDTH, HEIGHT;
 	
+	/**
+	 * @param WIDTH The width of the map
+	 * @param HEIGHT The height of the map
+	 * @param individuals The individuals within the system
+	 * @param obstacles The obstacles within the system
+	 * @param foods The food within the system
+	 */
 	public CollisionManager(int WIDTH, int HEIGHT,
 							ArrayList<Individual> individuals, 
 							ArrayList<Obstacle> obstacles,
@@ -29,6 +36,9 @@ public class CollisionManager {
 		RootPanel.get().add(dbgMsg);
 	}
 	
+	/**
+	 * Collision handling. In short, crossover if two individuals have collided. Food is eaten, and the self-reproduction procedure might be invoked.
+	 */
 	public void checkCollision() {
 		for(Individual i : individuals) {
 			double iX = i.getX();
@@ -66,6 +76,11 @@ public class CollisionManager {
 		}
 	}
 	
+	/**
+	 * @param b1 The first sprite
+	 * @param b2 The second sprite
+	 * @return false if the sprites have not collided, otherwise true.
+	 */
 	private boolean isCollision(Sprite b1, Sprite b2) {
 	    double xd = b1.getX() - b2.getX();
 	    double yd = b1.getY() - b2.getY();
