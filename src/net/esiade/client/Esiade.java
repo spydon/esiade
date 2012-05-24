@@ -37,7 +37,7 @@ public class Esiade implements EntryPoint {
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
     				tb_maptrust, tb_starve, tb_foodspawn, tb_foodstart, tb_selfrepr, 
     				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda, tb_elitism,
-    				tb_chance, tb_epochlength;
+    				tb_chance, tb_epochlength, tb_numImmigrants;
     private ListBox lb_reprtype, lb_crossover, lb_environment;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -72,6 +72,7 @@ public class Esiade implements EntryPoint {
 		tb_elitism = (TextBox)state.get("tb_elitism");
 		tb_chance = (TextBox)state.get("tb_chance");
 		tb_epochlength = (TextBox)state.get("tb_epochlength");
+		tb_numImmigrants = (TextBox)state.get("tb_numImmigrants");
 		lb_reprtype = (ListBox)state.get("lb_reprtype");
 		lb_crossover = (ListBox)state.get("lb_crossover");
 		lb_environment = (ListBox)state.get("lb_environment");
@@ -85,7 +86,8 @@ public class Esiade implements EntryPoint {
 	
 	private void run() {
 		new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), 
-									getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())), (int)getNumber(tb_elitism.getText()), getNumber(tb_chance.getText()));
+									getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())), (int)getNumber(tb_elitism.getText()), getNumber(tb_chance.getText()),
+									(int)getNumber(tb_numImmigrants.getText()));
 		Esiade.WIDTH = (int)getNumber(tb_width.getText());
 		Esiade.HEIGHT = (int)getNumber(tb_height.getText());
 		Food.spawnRate = getNumber(tb_foodspawn.getText());
@@ -146,6 +148,7 @@ public class Esiade implements EntryPoint {
 		state.put("tb_elitism", tb_elitism);
 		state.put("tb_chance", tb_chance);
 		state.put("tb_epochlength", tb_epochlength);
+		state.put("tb_numImmigrants", tb_numImmigrants);
 		state.put("lb_reprtype", lb_reprtype); 
 		state.put("lb_crossover", lb_crossover); 
 		state.put("lb_environment", lb_environment);
@@ -226,6 +229,9 @@ public class Esiade implements EntryPoint {
 
 		tb_epochlength = new TextBox();
 		tb_epochlength.setText("400");
+		
+		tb_numImmigrants = new TextBox();
+		tb_numImmigrants.setText("1");
 
 		tb_width = new TextBox();
 		tb_width.setText("500");
@@ -354,6 +360,9 @@ public class Esiade implements EntryPoint {
 		RootPanel.get("settingsholder").add(tb_matrix_x);
 		RootPanel.get("settingsholder").add(tb_matrix_y);
 		
+		RootPanel.get("settingsholder").add(new Label("Number of immigrants per epoch: "));
+		RootPanel.get("settingsholder").add(tb_numImmigrants);
+
 		RootPanel.get("settingsholder").add(new Label("Crossover type: "));
 		RootPanel.get("settingsholder").add(lb_crossover);
 

@@ -3,6 +3,8 @@ package net.esiade.client;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import java_cup.internal_error;
+
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -10,13 +12,15 @@ import com.google.gwt.user.client.ui.RootPanel;
 import net.esiade.client.sprite.Individual;
 
 /**
- * @author jonathan
+ * @author Jonathan
  *
  */
 public class EvolutionCore {
-	public static int WIDTH, HEIGHT, elitism;
+	public static int WIDTH, HEIGHT, elitism, numImmigrants;
 	private static double mRate, cRate, chance;
 	private static CType type;
+	private static Immigrants immigrantType;
+	private static ArrayList<Individual> historicElites = new ArrayList<Individual>(0);
 	
 	/**
 	 * @param width The width of the map matrix
@@ -25,7 +29,7 @@ public class EvolutionCore {
 	 * @param cRate The crossover rate
 	 */
 	public EvolutionCore(int width, int height, double mRate, double cRate, CType type,
-						int elitism, double chance){
+						int elitism, double chance, int numImmigrants){
 		EvolutionCore.WIDTH = width;
 		EvolutionCore.HEIGHT = height;
 		EvolutionCore.mRate = mRate;
@@ -33,14 +37,15 @@ public class EvolutionCore {
 		EvolutionCore.type = type;
 		EvolutionCore.elitism = elitism;
 		EvolutionCore.chance = chance;
+		EvolutionCore.numImmigrants = numImmigrants;
 	}
 
-	/**
-	 * @author jonathan
-	 * An enumeration of crossover-types. The names are self-explanatory.
-	 */
 	public static enum CType {
 		ONEPOINT, TWOPOINT, UNIFORM
+	}	
+	
+	public static enum Immigrants {
+		NOTATALL, ELITE, RANDOM
 	}	
 	
 	/**
@@ -100,11 +105,10 @@ public class EvolutionCore {
 	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
 		ArrayList<Individual> elites = new ArrayList<Individual>(0);
 		Collections.sort(individuals);
+		historicElites.add(individuals.get(0));
 		for(int x = 0; x<elitism; x++) 
 			elites.add(individuals.get(x).clone());
 			
-		@SuppressWarnings("unchecked")
-		ArrayList<Individual> temp = new ArrayList<Individual>(0);
 		for(Individual i : individuals) {
 			i.resetFood();
 			for(Individual j : individuals)
@@ -116,14 +120,27 @@ public class EvolutionCore {
 					break;
 				}
 		}
+		for (int x = 1;x <= numImmigrants;x++){
+			if (immigrantType == Immigrants.NOTATALL)
+				;
+			else if (immigrantType == Immigrants.RANDOM)
+				individuals.get(individuals.size()-elites.size()-x).genome = getRandomGenome(20);
+			else
+				individuals.set(individuals.size()-elites.size()-x, getRandomElite());
+		}
 		
 		int x = 1;
-		for(Individual e : elites) {
+		for (Individual e : elites) {
 			individuals.set(individuals.size()-x, e);
 			x++;
 		}
 			
 		return individuals;
+	}
+	
+	public static Individual getRandomElite(){
+		int number = Random.nextInt(historicElites.size());
+		return historicElites.get(number);
 	}
 	
 	public static Individual SelfReproduction(Individual i) {
