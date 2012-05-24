@@ -14,7 +14,6 @@ public class CollisionManager {
 	private ArrayList<Individual> individuals;
 	private ArrayList<Obstacle> obstacles;
 	private ArrayList<Food> foods;
-	private Label dbgMsg = new Label();
 	private final int WIDTH, HEIGHT;
 	
 	/**
@@ -33,13 +32,12 @@ public class CollisionManager {
 		this.individuals = individuals;
 		this.obstacles = obstacles;
 		this.foods = foods;
-		RootPanel.get().add(dbgMsg);
 	}
 	
 	/**
 	 * Collision handling. In short, crossover if two individuals have collided. Food is eaten, and the self-reproduction procedure might be invoked.
 	 */
-	public void checkCollision() {
+	public void checkCollision(boolean isEpochBased) {
 		for(Individual i : individuals) {
 			double iX = i.getX();
 			double iY = i.getY();
@@ -52,11 +50,12 @@ public class CollisionManager {
 				i.verticalCollision();
 			}
 			
-			for(Individual i2 : individuals) {
-				if(!i.equals(i2) && isCollision(i, i2)) {
-					EvolutionCore.Crossover(i, i2);
+			if(!isEpochBased)
+				for(Individual i2 : individuals) {
+					if(!i.equals(i2) && isCollision(i, i2)) {
+						EvolutionCore.Crossover(i, i2);
+					}
 				}
-			}
 	
 			for(Obstacle o : obstacles) {
 				if(iX >= o.getX() && iX <= o.getX()+o.getWidth())
@@ -67,9 +66,9 @@ public class CollisionManager {
 			
 			for(Food f : foods) {
 				if(isCollision(i, f)) {
-					if(i.eat()) {
+					i.eat();
+					if(!isEpochBased && i.getFood() >= i.getSelfReproductionLimit()) 
 						individuals.add(EvolutionCore.SelfReproduction(i));
-					}
 					foods.remove(f);
 				}
 			}

@@ -98,20 +98,30 @@ public class EvolutionCore {
 	}
 	
 	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
-		ArrayList<Individual> elite = new ArrayList<Individual>(0);
+		ArrayList<Individual> elites = new ArrayList<Individual>(0);
 		Collections.sort(individuals);
 		for(int x = 0; x<elitism; x++) 
-			elite.add(individuals.get(x));
+			elites.add(individuals.get(x).clone());
 			
-		for(Individual i : individuals)
+		@SuppressWarnings("unchecked")
+		ArrayList<Individual> temp = new ArrayList<Individual>(0);
+		for(Individual i : individuals) {
+			i.resetFood();
 			for(Individual j : individuals)
 				if((!i.equals(j) && Random.nextDouble() < chance) || 
 						individuals.get(individuals.size()-1).equals(j)) {
 					Crossover(i, j);
-					individuals.remove(i);
-					individuals.remove(j);
+					i.position = new Vector2D(Esiade.WIDTH, Esiade.HEIGHT);
+					j.position = new Vector2D(Esiade.WIDTH, Esiade.HEIGHT);
 					break;
 				}
+		}
+		
+		int x = 1;
+		for(Individual e : elites) {
+			individuals.set(individuals.size()-x, e);
+			x++;
+		}
 			
 		return individuals;
 	}
@@ -140,7 +150,7 @@ public class EvolutionCore {
 				if (randomPoint>0){
 					SwitchVectors(I1, I2, x, y);
 					randomPoint--;
-				} else {	
+				} else {
 					break;
 				}
 	}

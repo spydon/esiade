@@ -77,14 +77,11 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	}
 
 	/**
-	 * This function increases the ammount of food stored in the individual.
+	 * This function increases the amount of food stored in the individual.
 	 * @return If the amount of food is greater than selfReproductionLimit, return true, else return false
 	 */
-	public boolean eat() {
+	public void eat() {
 		food++;
-		if(food >= selfReproductionLimit)
-			return true;
-		return false;
 	}
 	
 	/* (non-Javadoc)
@@ -149,5 +146,10 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	@Override
 	public int compareTo(Individual i) {
 		return i.getFood()-getFood();
+	}
+
+
+	public int getSelfReproductionLimit() {
+		return selfReproductionLimit;
 	}
 }

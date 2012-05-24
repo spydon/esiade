@@ -32,7 +32,7 @@ public class Esiade implements EntryPoint {
     private ArrayList<Food> foods = new ArrayList<Food>(0);
     private ArrayList<Poisson> poissons = new ArrayList<Poisson>(0);
     private CollisionManager collisionManager;
-    private HashMap<String, Widget> state;
+    private HashMap<String, Widget> state = new HashMap<String, Widget>(0);
     private TextBox tb_ind, tb_food, tb_obs, tb_mutation, tb_crossover,
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
     				tb_maptrust, tb_starve, tb_foodspawn, tb_foodstart, tb_selfrepr, 
@@ -89,7 +89,7 @@ public class Esiade implements EntryPoint {
 		Esiade.WIDTH = (int)getNumber(tb_width.getText());
 		Esiade.HEIGHT = (int)getNumber(tb_height.getText());
 		Food.spawnRate = getNumber(tb_foodspawn.getText());
-
+		
 		int numInd = (int)getNumber(tb_ind.getText());
 		int numFood = (int)getNumber(tb_food.getText());
 		int numObs = (int)getNumber(tb_obs.getText());
@@ -135,7 +135,7 @@ public class Esiade implements EntryPoint {
 		state.put("tb_height", tb_height); 
 		state.put("tb_velocitycheck", tb_velocitycheck); 
 		state.put("tb_maptrust", tb_maptrust); 
-		state.put("tb_starve", tb_starve); 
+		state.put("tb_starve", tb_starve);
 		state.put("tb_foodspawn", tb_foodspawn);
 		state.put("tb_foodstart", tb_foodstart);
 		state.put("tb_selfrepr", tb_selfrepr); 
@@ -148,7 +148,7 @@ public class Esiade implements EntryPoint {
 		state.put("tb_epochlength", tb_epochlength);
 		state.put("lb_reprtype", lb_reprtype); 
 		state.put("lb_crossover", lb_crossover); 
-		state.put("lb_environment", lb_environment); 
+		state.put("lb_environment", lb_environment);
 	}
 	
 	private double getNumber(String parse) {
@@ -179,13 +179,12 @@ public class Esiade implements EntryPoint {
 		tb_food.setText("20");
 		
 		tb_poisson = new TextBox();
-		tb_poisson.setText("3");
-		
+		tb_poisson.setText("1");
 		tb_lambda = new TextBox();
-		tb_lambda.setText("40");
+		tb_lambda.setText("4");
 		
 		tb_foodspawn = new TextBox();
-		tb_foodspawn.setText("0.005");
+		tb_foodspawn.setText("0.02");
 		
 		tb_foodstart = new TextBox();
 		tb_foodstart.setText("9");
@@ -344,7 +343,7 @@ public class Esiade implements EntryPoint {
 		RootPanel.get("settingsholder").add(new Label("Chance of doing crossover with individual x*numberInList: "));
 		RootPanel.get("settingsholder").add(tb_chance);
 		
-		RootPanel.get("settingsholder").add(new Label("How many days between reproduction: "));
+		RootPanel.get("settingsholder").add(new Label("How many days between reproduction(Epoch): "));
 		RootPanel.get("settingsholder").add(tb_epochlength);
 
 		RootPanel.get("settingsholder").add(new Label("Environment size(X,Y): "));

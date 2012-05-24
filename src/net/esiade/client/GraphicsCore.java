@@ -145,12 +145,10 @@ public class GraphicsCore {
 		day++;
 		contextBuffer.setFillStyle(CssColor.make("GREEN"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
-		if(!isEpochBased)
-			collisionManager.checkCollision();
-		
-		for(Individual i : individuals) {
-			i.updatePos();
-			if(!isEpochBased) {
+		if(!isEpochBased) {
+			collisionManager.checkCollision(false);		
+			for(Individual i : individuals) {
+				i.updatePos();
 				if(day%i.getStarveRate()==0)
 					i.starve();
 				if(i.getFood() <= 0) {
@@ -158,10 +156,16 @@ public class GraphicsCore {
 						StatisticsCore.individualResult(i);
 					individuals.remove(i);
 				}
-			} else if (isEpochBased && day%epochLength==0) {
-				EvolutionCore.EpochReproduction(individuals);
+				i.draw(contextBuffer);
 			}
-			i.draw(contextBuffer);
+		} else {
+			collisionManager.checkCollision(true);
+			for(Individual i : individuals) {
+				i.updatePos();
+				i.draw(contextBuffer);
+			}
+			if(day%epochLength==0)
+				individuals = EvolutionCore.EpochReproduction(individuals);
 		}
 		
 		if(Random.nextDouble() <= Food.spawnRate)
