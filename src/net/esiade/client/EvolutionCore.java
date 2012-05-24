@@ -140,7 +140,7 @@ public class EvolutionCore {
 	
 	public static Individual getRandomElite(){
 		int number = Random.nextInt(historicElites.size());
-		return historicElites.get(number);
+		return historicElites.get(number).clone();
 	}
 	
 	public static Individual SelfReproduction(Individual i) {
