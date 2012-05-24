@@ -19,7 +19,7 @@ public class EvolutionCore {
 	public static int WIDTH, HEIGHT, elitism, numImmigrants;
 	private static double mRate, cRate, chance;
 	private static CType type;
-	private static Immigrants immigrantType;
+	private static IType iType;
 	private static ArrayList<Individual> historicElites = new ArrayList<Individual>(0);
 	
 	/**
@@ -29,12 +29,13 @@ public class EvolutionCore {
 	 * @param cRate The crossover rate
 	 */
 	public EvolutionCore(int width, int height, double mRate, double cRate, CType type,
-						int elitism, double chance, int numImmigrants){
+						int elitism, double chance, int numImmigrants, IType iType){
 		EvolutionCore.WIDTH = width;
 		EvolutionCore.HEIGHT = height;
 		EvolutionCore.mRate = mRate;
 		EvolutionCore.cRate = cRate;
 		EvolutionCore.type = type;
+		EvolutionCore.iType = iType;
 		EvolutionCore.elitism = elitism;
 		EvolutionCore.chance = chance;
 		EvolutionCore.numImmigrants = numImmigrants;
@@ -44,10 +45,9 @@ public class EvolutionCore {
 		ONEPOINT, TWOPOINT, UNIFORM
 	}	
 	
-	public static enum Immigrants {
-		NOTATALL, ELITE, RANDOM
+	public static enum IType {
+		NONE, ELITE, RANDOM
 	}	
-	
 	/**
 	 * @return This function returns a genome with all vectors set at random.
 	 */
@@ -121,12 +121,10 @@ public class EvolutionCore {
 				}
 		}
 		for (int x = 1;x <= numImmigrants;x++){
-			if (immigrantType == Immigrants.NOTATALL)
-				;
-			else if (immigrantType == Immigrants.RANDOM)
+			if (iType == IType.RANDOM)
 				individuals.get(individuals.size()-elites.size()-x).genome = getRandomGenome(20);
-			else
-				individuals.set(individuals.size()-elites.size()-x, getRandomElite());
+			else if (iType == IType.ELITE)
+				individuals.set(individuals.size()-elites.size()-x, getRandomElite());	
 		}
 		
 		int x = 1;
