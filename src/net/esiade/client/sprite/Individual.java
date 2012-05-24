@@ -100,6 +100,10 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 		return food;
 	}
 	
+	public double getJumpLength() {
+		return jumpLength;
+	}
+	
 	/**
 	 * @return The generation-number of an individual
 	 */

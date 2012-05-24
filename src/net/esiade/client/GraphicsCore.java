@@ -42,7 +42,7 @@ public class GraphicsCore {
     private ArrayList<Food> foods;
 	private ArrayList<Poisson> poissons;
     private CollisionManager collisionManager;
-    private Label l_day, l_ind, l_food, l_obs;
+    private Label l_day, l_ind, l_food, l_obs, l_epoch;
     private HashMap<String, Widget> state;
 
 	public GraphicsCore(ArrayList<Individual> individuals,
@@ -65,6 +65,7 @@ public class GraphicsCore {
 		this.state = state;
 		
 		l_day = new Label("Day: " + day);
+		l_epoch = new Label("Epoch: " + (int)(day/epochLength));
 		l_ind = new Label("Alive individuals: " + individuals.size());
 		l_food = new Label("Food in environment: " + foods.size());
 		l_obs = new Label("Obstacles in environment: " + obstacles.size());
@@ -114,6 +115,7 @@ public class GraphicsCore {
 		RootPanel.get("statisticsholder").add(settings);
 		RootPanel.get("statisticsholder").add(randomInd);
 		RootPanel.get("statisticsholder").add(l_day);
+		RootPanel.get("statisticsholder").add(l_epoch);
 		RootPanel.get("statisticsholder").add(l_ind);
 		RootPanel.get("statisticsholder").add(l_food);
 		RootPanel.get("statisticsholder").add(l_obs);
@@ -183,6 +185,7 @@ public class GraphicsCore {
 	
 	private void updateStatistics() {
 		l_day.setText("Day: " + day);
+		l_epoch.setText("Epoch: " + (int)(day/epochLength));
 		l_ind.setText("Alive individuals: " + individuals.size());
 		l_food.setText("Food in environment: " + foods.size());
 		l_obs.setText("Obstacles in environment: " + obstacles.size());

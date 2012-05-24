@@ -189,10 +189,10 @@ public class EvolutionCore {
 	 * This function will change a vector to a random new vector, with the probability set as mutation rate, see mRate.
 	 * @param I The individual to mutate.
 	 */
-	private static void Mutation(Individual I){
+	private static void Mutation(Individual i){
 		for (int y = 0;y < HEIGHT;y++)
 			for (int x=0;x< WIDTH;x++)
 				if (Random.nextDouble() < mRate)
-					I.genome[x][y] = new Vector2D();
+					i.genome[x][y] = new Vector2D(i.getJumpLength());
 	}
 }
