@@ -105,7 +105,8 @@ public class EvolutionCore {
 	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
 		ArrayList<Individual> elites = new ArrayList<Individual>(0);
 		Collections.sort(individuals);
-		historicElites.add(individuals.get(0));
+		individuals.get(0).resetFood();
+		historicElites.add((individuals.get(0).clone()));
 		for(int x = 0; x<elitism; x++) 
 			elites.add(individuals.get(x).clone());
 			
@@ -129,6 +130,7 @@ public class EvolutionCore {
 		
 		int x = 1;
 		for (Individual e : elites) {
+			e.resetFood();
 			individuals.set(individuals.size()-x, e);
 			x++;
 		}
