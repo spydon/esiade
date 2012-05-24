@@ -3,6 +3,7 @@ package net.esiade.client;
 import java.util.ArrayList;
 
 import net.esiade.client.EvolutionCore.CType;
+import net.esiade.client.EvolutionCore.IType;
 import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
 import net.esiade.client.sprite.Obstacle;
@@ -38,7 +39,7 @@ public class Esiade implements EntryPoint {
     				tb_maptrust, tb_starve, tb_foodspawn, tb_foodstart, tb_selfrepr, 
     				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda, tb_elitism,
     				tb_chance, tb_epochlength, tb_numImmigrants;
-    private ListBox lb_reprtype, lb_crossover, lb_environment;
+    private ListBox lb_reprtype, lb_crossover, lb_environment, lb_itype;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
 
@@ -73,6 +74,7 @@ public class Esiade implements EntryPoint {
 		tb_chance = (TextBox)state.get("tb_chance");
 		tb_epochlength = (TextBox)state.get("tb_epochlength");
 		tb_numImmigrants = (TextBox)state.get("tb_numImmigrants");
+		lb_itype = (ListBox)state.get("lb_itype");
 		lb_reprtype = (ListBox)state.get("lb_reprtype");
 		lb_crossover = (ListBox)state.get("lb_crossover");
 		lb_environment = (ListBox)state.get("lb_environment");
@@ -86,8 +88,8 @@ public class Esiade implements EntryPoint {
 	
 	private void run() {
 		new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), 
-									getType(lb_crossover.getValue(lb_crossover.getSelectedIndex())), (int)getNumber(tb_elitism.getText()), getNumber(tb_chance.getText()),
-									(int)getNumber(tb_numImmigrants.getText()));
+									getCType(lb_crossover.getValue(lb_crossover.getSelectedIndex())), (int)getNumber(tb_elitism.getText()), getNumber(tb_chance.getText()),
+									(int)getNumber(tb_numImmigrants.getText()), getIType(lb_itype.getValue(lb_itype.getSelectedIndex())));
 		Esiade.WIDTH = (int)getNumber(tb_width.getText());
 		Esiade.HEIGHT = (int)getNumber(tb_height.getText());
 		Food.spawnRate = getNumber(tb_foodspawn.getText());
@@ -152,6 +154,7 @@ public class Esiade implements EntryPoint {
 		state.put("lb_reprtype", lb_reprtype); 
 		state.put("lb_crossover", lb_crossover); 
 		state.put("lb_environment", lb_environment);
+		state.put("lb_itype", lb_itype);
 	}
 	
 	private double getNumber(String parse) {
@@ -164,14 +167,22 @@ public class Esiade implements EntryPoint {
 		return num;
 	}
 	
-	private CType getType(String parse) {
-		if(parse.equals("One-point")) {
+	private CType getCType(String parse) {
+		if(parse.equals("One-point"))
 			return CType.ONEPOINT;
-		} else if(parse.equals("Two-point")) {
+		else if(parse.equals("Two-point"))
 			return CType.TWOPOINT;
-		} else {
+		else 
 			return CType.UNIFORM;
-		}
+	}
+	
+	private IType getIType(String parse) {
+		if(parse.equals("Random")) 
+			return IType.RANDOM;
+		if(parse.equals("Elite")) 
+			return IType.ELITE;
+		else
+			return IType.NONE;
 	}
 	
 	private void makeSettingsUI() {
@@ -279,6 +290,11 @@ public class Esiade implements EntryPoint {
 		tb_selfrepr.setEnabled(false); 
 		tb_foodrepr.setEnabled(false);
 		
+		lb_itype = new ListBox();
+		lb_itype.addItem("Random");
+		lb_itype.addItem("Elite");
+		lb_itype.addItem("None");
+		
 		lb_crossover = new ListBox();
 		lb_crossover.addItem("One-point");
 		lb_crossover.addItem("Two-point");
@@ -362,6 +378,9 @@ public class Esiade implements EntryPoint {
 		
 		RootPanel.get("settingsholder").add(new Label("Number of immigrants per epoch: "));
 		RootPanel.get("settingsholder").add(tb_numImmigrants);
+		
+		RootPanel.get("settingsholder").add(new Label("Type of immigrants: "));
+		RootPanel.get("settingsholder").add(lb_itype);
 
 		RootPanel.get("settingsholder").add(new Label("Crossover type: "));
 		RootPanel.get("settingsholder").add(lb_crossover);
