@@ -3,11 +3,7 @@ package net.esiade.client;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import java_cup.internal_error;
-
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 
 import net.esiade.client.sprite.Individual;
 
@@ -122,15 +118,19 @@ public class EvolutionCore {
 				}
 		}
 		for (int x = 1;x <= numImmigrants;x++){
-			if (iType == IType.RANDOM)
-				individuals.get(individuals.size()-elites.size()-x).genome = getRandomGenome(20);
-			else if (iType == IType.ELITE)
-				individuals.set(individuals.size()-elites.size()-x, getRandomElite());	
+			if (iType == IType.RANDOM) {
+				Individual immigrant = individuals.get(individuals.size()-elites.size()-x);
+				immigrant.genome = getRandomGenome(20);
+				immigrant.setImage("./immigrant.png");				
+			} else if (iType == IType.ELITE) {
+				individuals.set(individuals.size()-elites.size()-x, getRandomElite());
+			}
 		}
 		
 		int x = 1;
 		for (Individual e : elites) {
 			e.resetFood();
+			e.setImage("./elite.png");
 			individuals.set(individuals.size()-x, e);
 			x++;
 		}
@@ -140,6 +140,8 @@ public class EvolutionCore {
 	
 	public static Individual getRandomElite(){
 		int number = Random.nextInt(historicElites.size());
+		Individual elite = historicElites.get(number).clone();
+		elite.setImage("./immigrant.png");
 		return historicElites.get(number).clone();
 	}
 	

@@ -2,6 +2,7 @@ package net.esiade.client;
 
 import java.util.ArrayList;
 
+import net.esiade.client.DynamicsCore.EType;
 import net.esiade.client.EvolutionCore.CType;
 import net.esiade.client.EvolutionCore.IType;
 import net.esiade.client.sprite.Food;
@@ -38,7 +39,7 @@ public class Esiade implements EntryPoint {
     				tb_matrix_x, tb_matrix_y, tb_width, tb_height, tb_velocitycheck,
     				tb_maptrust, tb_starve, tb_foodspawn, tb_foodstart, tb_selfrepr, 
     				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda, tb_elitism,
-    				tb_chance, tb_epochlength, tb_numImmigrants;
+    				tb_chance, tb_epochlength, tb_numImmigrants, tb_envepochs;
     private ListBox lb_reprtype, lb_crossover, lb_environment, lb_itype;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
@@ -74,6 +75,7 @@ public class Esiade implements EntryPoint {
 		tb_chance = (TextBox)state.get("tb_chance");
 		tb_epochlength = (TextBox)state.get("tb_epochlength");
 		tb_numImmigrants = (TextBox)state.get("tb_numImmigrants");
+		tb_envepochs = (TextBox)state.get("tb_envepochs");
 		lb_itype = (ListBox)state.get("lb_itype");
 		lb_reprtype = (ListBox)state.get("lb_reprtype");
 		lb_crossover = (ListBox)state.get("lb_crossover");
@@ -100,6 +102,7 @@ public class Esiade implements EntryPoint {
 		int numPoisson = (int)getNumber(tb_poisson.getText());
 		int lambda = (int)getNumber(tb_lambda.getText());
 		int epochLength = (int)getNumber(tb_epochlength.getText());
+		int changeEpoch = (int)getNumber(tb_envepochs.getText());
 		boolean isEpochBased = lb_reprtype.getItemText(lb_reprtype.getSelectedIndex()).equals("Epoch based");
 		double scaleSpeed = getNumber(tb_scalespeed.getText());
 		RootPanel.get("settingsholder").clear();
@@ -123,8 +126,9 @@ public class Esiade implements EntryPoint {
 			obstacles.add(new Obstacle(new Vector2D(WIDTH,HEIGHT)));
 		
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
+		DynamicsCore dynamicsCore = new DynamicsCore(getEType(lb_environment.getItemText(lb_environment.getSelectedIndex())));
 		saveState();
-		new GraphicsCore(individuals, obstacles, foods, poissons, collisionManager, epochLength, isEpochBased, state);
+		new GraphicsCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, changeEpoch, epochLength, isEpochBased, state);
 	}
 	
 	private void saveState() {
@@ -151,6 +155,7 @@ public class Esiade implements EntryPoint {
 		state.put("tb_chance", tb_chance);
 		state.put("tb_epochlength", tb_epochlength);
 		state.put("tb_numImmigrants", tb_numImmigrants);
+		state.put("tb_envepochs", tb_envepochs);
 		state.put("lb_reprtype", lb_reprtype); 
 		state.put("lb_crossover", lb_crossover); 
 		state.put("lb_environment", lb_environment);
@@ -174,6 +179,17 @@ public class Esiade implements EntryPoint {
 			return CType.TWOPOINT;
 		else 
 			return CType.UNIFORM;
+	}
+	
+	private EType getEType(String parse) {
+		if(parse.equals("Small changes"))
+			return EType.SMALL;
+		else if(parse.equals("Big changes"))
+			return EType.BIG;
+		else if(parse.equals("Seasonal"))
+			return EType.SEASONAL;
+		else
+			return EType.STATIC;
 	}
 	
 	private IType getIType(String parse) {
@@ -243,6 +259,9 @@ public class Esiade implements EntryPoint {
 		
 		tb_numImmigrants = new TextBox();
 		tb_numImmigrants.setText("1");
+		
+		tb_envepochs = new TextBox();
+		tb_envepochs.setText("100");
 
 		tb_width = new TextBox();
 		tb_width.setText("500");
@@ -304,7 +323,8 @@ public class Esiade implements EntryPoint {
 		lb_environment.addItem("Small changes");
 		lb_environment.addItem("Big changes");
 		lb_environment.addItem("Seasonal");
-		lb_environment.setEnabled(false);
+		lb_environment.addItem("Static");
+		//lb_environment.setEnabled(false);
 		
 		drawSettingsUI();
 		
@@ -387,6 +407,9 @@ public class Esiade implements EntryPoint {
 
 		RootPanel.get("settingsholder").add(new Label("Environment type: "));
 		RootPanel.get("settingsholder").add(lb_environment);
+		
+		RootPanel.get("settingsholder").add(new Label("Changes every X epoch: "));
+		RootPanel.get("settingsholder").add(tb_envepochs);
 
 		run = new Button("Run simulation!!!");
 		run.addClickHandler(new ClickHandler() {

@@ -44,10 +44,10 @@ public class Poisson {
 	}
 	
 	/**
-	 * @param newPosition The position of the distribution is moved to the point newPosition.
+	 * @param position The position of the distribution is moved to the point newPosition.
 	 */
-	public void setPosition(Vector2D newPosition){
-		position = newPosition;
+	public void setPosition(Vector2D position){
+		this.position = position;
 	}
 
 	/**
@@ -62,5 +62,12 @@ public class Poisson {
 	 */
 	public int getLambda(){
 		return lambda;
+	}
+	
+	/**
+	 * @return Get the middle position of the distribution.
+	 */
+	public Vector2D getPosition() {
+		return position;
 	}
 }

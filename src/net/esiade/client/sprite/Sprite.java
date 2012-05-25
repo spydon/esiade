@@ -20,7 +20,10 @@ public abstract class Sprite {
 		  this.image = image;
 		  this.position = position;
 	  }
-	  
+	
+	public void setImage(String imageLocation) {
+		  this.image = (ImageElement)new Image(imageLocation).getElement().cast();
+	}	  
 
 	/**
 	 * @return The x-coordinate of the sprite

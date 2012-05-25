@@ -35,6 +35,7 @@ public class GraphicsCore {
 	private final int REFRESH_RATE = 20;
 	private int day = 0;
 	private int epochLength;
+	private int changeEpoch;
 	private boolean isEpochBased;
 	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals;
@@ -42,6 +43,7 @@ public class GraphicsCore {
     private ArrayList<Food> foods;
 	private ArrayList<Poisson> poissons;
     private CollisionManager collisionManager;
+    private DynamicsCore dynamicsCore;
     private Label l_day, l_ind, l_food, l_obs, l_epoch;
     private HashMap<String, Widget> state;
 
@@ -50,17 +52,21 @@ public class GraphicsCore {
 						ArrayList<Food> foods,
 						ArrayList<Poisson> poissons,
 						CollisionManager collisionManager, 
+						DynamicsCore dynamicsCore,
+						int changeEpoch,
 						int epochLength,
 						boolean isEpochBased,
 						HashMap<String, Widget> state) {
 		GraphicsCore.WIDTH = Esiade.WIDTH;
 		GraphicsCore.HEIGHT = Esiade.HEIGHT;
+		this.dynamicsCore = dynamicsCore;
 		this.individuals = individuals;
 		this.obstacles = obstacles;
 		this.foods = foods;
 		this.poissons = poissons;
 		this.collisionManager = collisionManager;
 		this.epochLength = epochLength;
+		this.changeEpoch = changeEpoch;
 		this.isEpochBased = isEpochBased;
 		this.state = state;
 		
@@ -93,7 +99,16 @@ public class GraphicsCore {
 			@Override
 			public void onClick(ClickEvent event) {
 				ArrayList<Individual> individuals = getIndividuals();
-				StatisticsCore.individualResult(individuals.get(Random.nextInt(individuals.size())));
+				StatisticsCore.randomIndividualResult(individuals);
+			}
+		});
+		
+		Button allInd = new Button("All individuals stats");
+		randomInd.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ArrayList<Individual> individuals = getIndividuals();
+				StatisticsCore.allIndividualsResult(individuals);
 			}
 		});
 		
@@ -114,6 +129,7 @@ public class GraphicsCore {
 		
 		RootPanel.get("statisticsholder").add(settings);
 		RootPanel.get("statisticsholder").add(randomInd);
+		RootPanel.get("statisticsholder").add(allInd);
 		RootPanel.get("statisticsholder").add(l_day);
 		RootPanel.get("statisticsholder").add(l_epoch);
 		RootPanel.get("statisticsholder").add(l_ind);
@@ -145,7 +161,7 @@ public class GraphicsCore {
 	
 	private void doUpdate() {
 		day++;
-		contextBuffer.setFillStyle(CssColor.make("GREEN"));
+		contextBuffer.setFillStyle(CssColor.make("BLACK"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
 		if(!isEpochBased) {
 			collisionManager.checkCollision(false);		
@@ -155,7 +171,7 @@ public class GraphicsCore {
 					i.starve();
 				if(i.getFood() <= 0) {
 					if(individuals.size()==1)
-						StatisticsCore.individualResult(i);
+						StatisticsCore.randomIndividualResult(individuals);
 					individuals.remove(i);
 				}
 				i.draw(contextBuffer);
@@ -169,6 +185,9 @@ public class GraphicsCore {
 			if(day%epochLength==0)
 				individuals = EvolutionCore.EpochReproduction(individuals);
 		}
+		
+		if(day%changeEpoch == 0 && dynamicsCore.type != DynamicsCore.EType.STATIC)
+			dynamicsCore.changeEnvironment(poissons);
 		
 		if(Random.nextDouble() <= Food.spawnRate)
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
