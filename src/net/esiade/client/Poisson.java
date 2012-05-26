@@ -33,7 +33,10 @@ public class Poisson {
 	 * @return A vector to a position around the poisson distribution, with 20*(standard deviation).
 	 */
 	public Vector2D getVector(){
-		return new Vector2D(position.x + 20*(getNumber()-lambda), position.y + 20*(getNumber()-lambda));	
+		Vector2D v = new Vector2D(position.x + 20*(getNumber()-lambda), position.y + 20*(getNumber()-lambda)); 
+		while(v.x < 0 || v.x > Esiade.WIDTH-20 || v.y < 0 || v.y > Esiade.HEIGHT-20)
+			v = new Vector2D(position.x + 20*(getNumber()-lambda), position.y + 20*(getNumber()-lambda));
+		return v;
 	}
 
 	/**

@@ -40,6 +40,10 @@ public abstract class MovingSprite extends Sprite{
 		velocity.setX(0.0);
 	}
 	
+	public Vector2D getVelocity() {
+		return velocity;
+	}
+	
 	/**
 	 * Get the speed of the sprite.
 	 * @return the speed of the sprite.

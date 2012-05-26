@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import net.esiade.client.sprite.Individual;
 
@@ -47,29 +49,33 @@ public class EvolutionCore {
 	/**
 	 * @return This function returns a genome with all vectors set at random.
 	 */
-	public static Vector2D[][] getRandomGenome(double k) {
+	public static Vector2D[][] getRandomGenome(double jumpLength) {
 		Vector2D[][] genome = new Vector2D[WIDTH][HEIGHT];
 		for (int x = 0;x < WIDTH;x++)
 			for (int y = 0; y < HEIGHT;y++)
-				genome[x][y] = new Vector2D(k);
+				genome[x][y] = new Vector2D(jumpLength);
 		return genome;
 	}
 
 	/**
 	 * This function will change the vector with the position (x,y) in the matrix between I1 and I2
-	 * @param I1 The first individual
-	 * @param I2 The second individual
+	 * @param i1 The first individual
+	 * @param i2 The second individual
 	 * @param x The x-coordinate in the matrix 
 	 * @param y The y-coordinate in the matrix
 	 * 
 	 */
-	public static void SwitchVectors(Individual I1, Individual I2, int x, int y){
-		Vector2D temp;		
-		temp = I1.genome[x][y];
-		I1.genome[x][y] = I2.genome[x][y];
-		I2.genome[x][y] = temp;
+	public static void SwitchVectors(Individual i1, Individual i2, int x, int y){
+		Vector2D temp;
+		temp = i1.genome[x][y];
+		i1.genome[x][y] = i2.genome[x][y];
+		i2.genome[x][y] = temp;
 	}
 	
+	public static void CollisionCrossover(Individual i1, Individual i2) {
+		if(i1.getReproductionLimit() <= i1.getFood() && i2.getReproductionLimit() <= i2.getFood())
+			Crossover(i1,i2);
+	}
 	
 	/**
 	 * This is a general function for crossover, this function redirects to the appropriate crossover subfunction. The subfunctions implement common crossover operations, but applied on vectors instead of bits.
@@ -77,9 +83,7 @@ public class EvolutionCore {
 	 * @param i2 The second individual
 	 */
 	public static void Crossover(Individual i1, Individual i2) {
-		if (Random.nextDouble() < cRate && 
-				i1.getReproductionLimit() <= i1.getFood() && 
-				i2.getReproductionLimit() <= i2.getFood()) {
+		if (Random.nextDouble() < cRate) {
 			if (type == CType.ONEPOINT)
 				OnePointCrossover(i1, i2);
 			else if (type == CType.TWOPOINT)
@@ -112,15 +116,18 @@ public class EvolutionCore {
 				if((!i.equals(j) && Random.nextDouble() < chance) || 
 						individuals.get(individuals.size()-1).equals(j)) {
 					Crossover(i, j);
-					i.position = new Vector2D(Esiade.WIDTH, Esiade.HEIGHT);
-					j.position = new Vector2D(Esiade.WIDTH, Esiade.HEIGHT);
+					RootPanel.get().add(new Label("I and J got the pök"));
+//					i.position = new Vector2D(Esiade.WIDTH-i.getWidth(),Esiade.HEIGHT-i.getHeight());
+//					j.position = new Vector2D(Esiade.WIDTH-j.getWidth(),Esiade.HEIGHT-j.getHeight());
+					i.position = new Vector2D(0.0,0.0);
+					j.position = new Vector2D(0.0,0.0);
 					break;
 				}
 		}
 		for (int x = 1;x <= numImmigrants;x++){
 			if (iType == IType.RANDOM) {
 				Individual immigrant = individuals.get(individuals.size()-elites.size()-x);
-				immigrant.genome = getRandomGenome(20);
+				immigrant.genome = getRandomGenome(immigrant.getJumpLength());
 				immigrant.setImage("./immigrant.png");				
 			} else if (iType == IType.ELITE) {
 				individuals.set(individuals.size()-elites.size()-x, getRandomElite());

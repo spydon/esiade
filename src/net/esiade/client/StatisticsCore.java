@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import net.esiade.client.sprite.Individual;
@@ -17,12 +18,9 @@ public class StatisticsCore {
 	
 	public static void allIndividualsResult(ArrayList<Individual> individuals) {
 		final DialogBox db = new DialogBox();
-		VerticalPanel vp = new VerticalPanel();
-		for(Individual i : individuals) {
-			vp.add(new Label("Generation: " + i.getGeneration()));
-			vp.add(new Label("Food: " + i.getFood()));
-		}
-		db.add(vp);
+		String text = "All individuals: </br>";
+		for(Individual i : individuals) 
+			text = text.concat("Generation: " + i.getGeneration() + " Food: " + i.getFood() + " Velocity: " + i.getVelocity() + "</br>");
 		Button close = new Button("Close");
 		close.addClickHandler(new ClickHandler() {
 			@Override
@@ -30,9 +28,9 @@ public class StatisticsCore {
 				db.hide();
 			}
 		});
-		vp.add(close);
+		db.setHTML(text);
 		db.setAutoHideEnabled(true);
-		db.add(vp);
+		db.add(close);
 		db.center();
 	}
 

@@ -36,7 +36,7 @@ public class GraphicsCore {
 	private int day = 0;
 	private int epochLength;
 	private int changeEpoch;
-	private boolean isEpochBased;
+	private boolean isEpochBased, visibleMatrix;
 	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals;
     private ArrayList<Obstacle> obstacles;
@@ -56,6 +56,7 @@ public class GraphicsCore {
 						int changeEpoch,
 						int epochLength,
 						boolean isEpochBased,
+						boolean visibleMatrix,
 						HashMap<String, Widget> state) {
 		GraphicsCore.WIDTH = Esiade.WIDTH;
 		GraphicsCore.HEIGHT = Esiade.HEIGHT;
@@ -68,6 +69,7 @@ public class GraphicsCore {
 		this.epochLength = epochLength;
 		this.changeEpoch = changeEpoch;
 		this.isEpochBased = isEpochBased;
+		this.visibleMatrix = visibleMatrix;
 		this.state = state;
 		
 		l_day = new Label("Day: " + day);
@@ -104,7 +106,7 @@ public class GraphicsCore {
 		});
 		
 		Button allInd = new Button("All individuals stats");
-		randomInd.addClickHandler(new ClickHandler() {
+		allInd.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				ArrayList<Individual> individuals = getIndividuals();
@@ -163,6 +165,29 @@ public class GraphicsCore {
 		day++;
 		contextBuffer.setFillStyle(CssColor.make("BLACK"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
+		int cellWidth = WIDTH/EvolutionCore.WIDTH;
+		int cellHeight = HEIGHT/EvolutionCore.HEIGHT;
+		
+	    contextBuffer.setLineWidth(1);
+	    contextBuffer.setStrokeStyle("RED");
+	    if(visibleMatrix) {
+			for(int x = cellWidth; x < WIDTH; x+=cellWidth) {
+				contextBuffer.beginPath();
+				contextBuffer.moveTo(x, 0);
+				contextBuffer.lineTo(x, HEIGHT);
+				contextBuffer.closePath();
+				contextBuffer.stroke();		
+			}
+			
+			for(int y = cellHeight; y < HEIGHT; y+=cellHeight) {
+				contextBuffer.beginPath();
+				contextBuffer.moveTo(0, y);
+				contextBuffer.lineTo(WIDTH, y);
+				contextBuffer.closePath();
+				contextBuffer.stroke();	
+			}
+	    }
+		
 		if(!isEpochBased) {
 			collisionManager.checkCollision(false);		
 			for(Individual i : individuals) {
