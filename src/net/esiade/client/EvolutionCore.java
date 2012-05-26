@@ -107,16 +107,18 @@ public class EvolutionCore {
 		Collections.sort(individuals);
 		individuals.get(0).resetFood();
 		historicElites.add((individuals.get(0).clone()));
-		for(int x = 0; x<elitism; x++) 
-			elites.add(individuals.get(x).clone());
+		for(int x = 0; x<elitism; x++) {
+			Individual e = individuals.get(x).clone();
+			e.position = new Vector2D(0.0,0.0);
+			elites.add(e);
+		}
 			
 		for(Individual i : individuals) {
 			i.resetFood();
 			for(Individual j : individuals)
 				if((!i.equals(j) && Random.nextDouble() < chance) || 
 						individuals.get(individuals.size()-1).equals(j)) {
-					Crossover(i, j);
-					RootPanel.get().add(new Label("I and J got the pök"));
+					Crossover(i, j.clone());
 //					i.position = new Vector2D(Esiade.WIDTH-i.getWidth(),Esiade.HEIGHT-i.getHeight());
 //					j.position = new Vector2D(Esiade.WIDTH-j.getWidth(),Esiade.HEIGHT-j.getHeight());
 					i.position = new Vector2D(0.0,0.0);
@@ -169,7 +171,6 @@ public class EvolutionCore {
 	 * @param I2 The second individual
 	 */
 	private static void OnePointCrossover(Individual I1, Individual I2){
-
 		int randomPoint = Random.nextInt(WIDTH*HEIGHT);
 		for(int y = 0;y < HEIGHT; y++)
 			for (int x = 0; x < WIDTH; x++)
