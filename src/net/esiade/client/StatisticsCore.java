@@ -16,6 +16,8 @@ import net.esiade.client.sprite.Individual;
 
 public class StatisticsCore {
 	
+	private static int[] foodsEaten;
+	
 	public static void allIndividualsResult(ArrayList<Individual> individuals) {
 		final DialogBox db = new DialogBox();
 		String text = "All individuals: </br>";
@@ -53,6 +55,17 @@ public class StatisticsCore {
 		db.setAutoHideEnabled(true);
 		db.add(close);
 		db.center();
+	}
+	
+	public static int foodEaten(ArrayList<Individual> individuals) {
+		int food = 0;
+		for(Individual i : individuals)
+			food=+i.getFood();
+		return food;
+	}
+	
+	public static void drawGraph() {
+		
 	}
 
 }

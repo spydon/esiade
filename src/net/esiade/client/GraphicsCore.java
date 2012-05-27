@@ -34,8 +34,7 @@ public class GraphicsCore {
 	public static int WIDTH, HEIGHT;
 	private final int REFRESH_RATE = 20;
 	private int day = 0;
-	private int epochLength;
-	private int changeEpoch;
+	private int epochLength, changeEpoch, foodPerEpoch;
 	private boolean isEpochBased, visibleMatrix;
 	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals;
@@ -44,7 +43,7 @@ public class GraphicsCore {
 	private ArrayList<Poisson> poissons;
     private CollisionManager collisionManager;
     private DynamicsCore dynamicsCore;
-    private Label l_day, l_ind, l_food, l_obs, l_epoch;
+    private Label l_day, l_ind, l_food, l_obs, l_epoch, l_foodPerEpoch;
     private HashMap<String, Widget> state;
 
 	public GraphicsCore(ArrayList<Individual> individuals,
@@ -73,6 +72,7 @@ public class GraphicsCore {
 		this.state = state;
 		
 		l_day = new Label("Day: " + day);
+		l_foodPerEpoch = new Label(foodPerEpoch + " foods eaten this epoch");
 		l_epoch = new Label("Epoch: " + (int)(day/epochLength));
 		l_ind = new Label("Alive individuals: " + individuals.size());
 		l_food = new Label("Food in environment: " + foods.size());
@@ -133,6 +133,7 @@ public class GraphicsCore {
 		RootPanel.get("statisticsholder").add(randomInd);
 		RootPanel.get("statisticsholder").add(allInd);
 		RootPanel.get("statisticsholder").add(l_day);
+		RootPanel.get("statisticsholder").add(l_foodPerEpoch);
 		RootPanel.get("statisticsholder").add(l_epoch);
 		RootPanel.get("statisticsholder").add(l_ind);
 		RootPanel.get("statisticsholder").add(l_food);
@@ -207,8 +208,12 @@ public class GraphicsCore {
 				i.updatePos();
 				i.draw(contextBuffer);
 			}
-			if(day%epochLength==0)
+			if(day%epochLength==0) {
+				foodPerEpoch = StatisticsCore.foodEaten(individuals);
+				RootPanel.get().add(new Label(foodPerEpoch + ""));
 				individuals = EvolutionCore.EpochReproduction(individuals);
+			}	
+			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
 		}
 		
 		if(day%changeEpoch == 0 && dynamicsCore.type != DynamicsCore.EType.STATIC)
@@ -229,6 +234,7 @@ public class GraphicsCore {
 	
 	private void updateStatistics() {
 		l_day.setText("Day: " + day);
+		l_foodPerEpoch.setText(foodPerEpoch + " foods eaten this epoch");
 		l_epoch.setText("Epoch: " + (int)(day/epochLength));
 		l_ind.setText("Alive individuals: " + individuals.size());
 		l_food.setText("Food in environment: " + foods.size());

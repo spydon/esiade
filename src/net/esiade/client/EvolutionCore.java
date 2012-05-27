@@ -66,9 +66,8 @@ public class EvolutionCore {
 	 * 
 	 */
 	public static void SwitchVectors(Individual i1, Individual i2, int x, int y){
-		Vector2D temp;
-		temp = i1.genome[x][y];
-		i1.genome[x][y] = i2.genome[x][y];
+		Vector2D temp = i1.genome[x][y].clone();
+		i1.genome[x][y] = i2.genome[x][y].clone();
 		i2.genome[x][y] = temp;
 	}
 	
@@ -112,7 +111,7 @@ public class EvolutionCore {
 			e.position = new Vector2D(0.0,0.0);
 			elites.add(e);
 		}
-			
+		
 		for(Individual i : individuals) {
 			i.resetFood();
 			for(Individual j : individuals)
