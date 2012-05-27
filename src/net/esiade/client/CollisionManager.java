@@ -41,10 +41,10 @@ public class CollisionManager {
 			
 			if(iX < 0 || iX+i.getWidth() > WIDTH) {
 				i.position.setX((int)((iX+i.getWidth())/WIDTH)*(WIDTH-i.getWidth()));
-				i.horizontalCollision();
+				//i.horizontalCollision();
 			} else if(iY < 0 || iY+i.getHeight() > HEIGHT) {
 				i.position.setY((int)((iY+i.getHeight())/HEIGHT)*(HEIGHT-i.getHeight()));
-				i.verticalCollision();
+				//i.verticalCollision();
 			}
 			
 			if(!isEpochBased)
@@ -54,12 +54,12 @@ public class CollisionManager {
 					}
 				}
 	
-			for(Obstacle o : obstacles) {
-				if(iX >= o.getX() && iX <= o.getX()+o.getWidth())
-					i.verticalCollision();
-				if(iY >= o.getY() && iY <= o.getY()+o.getHeight())
-					i.horizontalCollision();
-			}
+//			for(Obstacle o : obstacles) {
+//				if(iX >= o.getX() && iX <= o.getX()+o.getWidth())
+//					i.verticalCollision();
+//				if(iY >= o.getY() && iY <= o.getY()+o.getHeight())
+//					i.horizontalCollision();
+//			}
 			
 			for(Food f : foods) {
 				if(isCollision(i, f)) {

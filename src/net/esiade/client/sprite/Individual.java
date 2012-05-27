@@ -73,7 +73,14 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 		} else {
 			counter++;
 		}
-		position.add(velocity);
+		
+		double x = velocity.x;
+		double y = velocity.y;
+		if((position.x == 0 && x<0) || (position.x == Esiade.WIDTH-getWidth() && x>0))
+			x = 0.0;
+		if((position.y == 0 && y<0) || (position.y == Esiade.HEIGHT-getHeight() && y>0))
+			y = 0.0;
+		position.add(new Vector2D(x,y));
 	}
 
 	/**

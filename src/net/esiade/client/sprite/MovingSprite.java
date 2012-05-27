@@ -17,7 +17,6 @@ public abstract class MovingSprite extends Sprite{
 	 * Update the position to a new position with the vectors,	collisions have been taken care of.
 	 */
 	public void updatePos() {
-
 		position.add(velocity);
 	}
 	
@@ -28,7 +27,7 @@ public abstract class MovingSprite extends Sprite{
 //		What should happen to the vectors if there is a
 //		horizontal collision? Set the vectors to make the
 //		individual go sideways.
-		velocity.setY(0.0);
+		velocity = new Vector2D(velocity.x,0.0);
 	}
 	/**
 	 * If a sprite collides with the left or right border, set its velocity in that direction to 0. 
@@ -37,7 +36,7 @@ public abstract class MovingSprite extends Sprite{
 //		What should happen to the vectors if there is a
 //		horizontal collision? Set the vectors to make the
 //		individual go sideways.
-		velocity.setX(0.0);
+		velocity = new Vector2D(0.0,velocity.y);
 	}
 	
 	public Vector2D getVelocity() {
