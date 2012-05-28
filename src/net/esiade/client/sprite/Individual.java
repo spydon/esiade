@@ -1,6 +1,8 @@
 package net.esiade.client.sprite;
 
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import net.esiade.client.Esiade;
 import net.esiade.client.EvolutionCore;
@@ -64,11 +66,15 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 //		Update the position to a new position with the vectors, 
 //		collisions have been taken care of.
 		if(counter==veloCheck) {
-			if(Random.nextDouble() <= mapTrust)
+			if(Random.nextDouble() <= mapTrust) {
 				velocity = genome[(int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH)]
 								[(int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT)];
-			else
+//				int x = (int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH);
+//				int y = (int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT);
+//				RootPanel.get().add(new Label("X: " + x + " Y: " + y));
+			} else {
 				velocity = new Vector2D(jumpLength);
+			}
 			counter = 0;
 		} else {
 			counter++;

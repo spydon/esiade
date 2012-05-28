@@ -60,7 +60,7 @@ public class StatisticsCore {
 	public static int foodEaten(ArrayList<Individual> individuals) {
 		int food = 0;
 		for(Individual i : individuals)
-			food=+i.getFood();
+			food+=i.getFood();
 		return food;
 	}
 	

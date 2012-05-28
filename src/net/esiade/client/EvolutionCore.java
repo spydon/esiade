@@ -81,7 +81,7 @@ public class EvolutionCore {
 	 * @param i1 The first individual
 	 * @param i2 The second individual
 	 */
-	public static void Crossover(Individual i1, Individual i2) {
+	public static Individual[] Crossover(Individual i1, Individual i2) {
 		if (Random.nextDouble() < cRate) {
 			if (type == CType.ONEPOINT)
 				OnePointCrossover(i1, i2);
@@ -99,25 +99,37 @@ public class EvolutionCore {
 			i1.increaseGen();
 			i2.increaseGen();
 		}
+		Individual[] l = {i1, i2};
+		return l;
 	}
 	
 	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
 		ArrayList<Individual> elites = new ArrayList<Individual>(0);
 		Collections.sort(individuals);
-		individuals.get(0).resetFood();
-		historicElites.add((individuals.get(0).clone()));
+		for(Individual i : individuals)
+			RootPanel.get().add(new Label(individuals.indexOf(i) + " " + i.getFood()));
+		
+		Individual hE = individuals.get(0).clone();
+		hE.resetFood();
+		historicElites.add(hE);
+		
 		for(int x = 0; x<elitism; x++) {
 			Individual e = individuals.get(x).clone();
 			e.position = new Vector2D(0.0,0.0);
 			elites.add(e);
 		}
 		
-		for(Individual i : individuals) {
+		@SuppressWarnings("unchecked")
+		ArrayList<Individual> newIndividuals = new ArrayList<Individual>();
+		while(newIndividuals.size() < individuals.size()) {
+			Individual i = individuals.get(newIndividuals.size());
 			i.resetFood();
 			for(Individual j : individuals)
 				if((!i.equals(j) && Random.nextDouble() < chance) || 
 						individuals.get(individuals.size()-1).equals(j)) {
-					Crossover(i, j.clone());
+					Crossover(i, j);
+					newIndividuals.add(i);
+					newIndividuals.add(j);
 //					i.position = new Vector2D(Esiade.WIDTH-i.getWidth(),Esiade.HEIGHT-i.getHeight());
 //					j.position = new Vector2D(Esiade.WIDTH-j.getWidth(),Esiade.HEIGHT-j.getHeight());
 					i.position = new Vector2D(0.0,0.0);
@@ -125,6 +137,27 @@ public class EvolutionCore {
 					break;
 				}
 		}
+		if(newIndividuals.size() > individuals.size())
+			newIndividuals.remove(newIndividuals.size()-1);
+		
+		individuals = newIndividuals;
+			
+//		for(int x = 0; x<individuals.size()/2; x++) {
+//			Individual i = individuals.get(x);
+//			i.resetFood();
+//			for(Individual j : individuals)
+//				if((!i.equals(j) && Random.nextDouble() < chance) || 
+//						individuals.get(individuals.size()-1).equals(j)) {
+//					Crossover(i, j);
+//					newIndividuals.add(i);
+//					temp.remove(i);
+////					i.position = new Vector2D(Esiade.WIDTH-i.getWidth(),Esiade.HEIGHT-i.getHeight());
+////					j.position = new Vector2D(Esiade.WIDTH-j.getWidth(),Esiade.HEIGHT-j.getHeight());
+//					i.position = new Vector2D(0.0,0.0);
+//					j.position = new Vector2D(0.0,0.0);
+//					break;
+//				}
+//		}
 		for (int x = 1;x <= numImmigrants;x++){
 			if (iType == IType.RANDOM) {
 				Individual immigrant = individuals.get(individuals.size()-elites.size()-x);

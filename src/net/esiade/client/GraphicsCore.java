@@ -34,7 +34,9 @@ public class GraphicsCore {
 	public static int WIDTH, HEIGHT;
 	private final int REFRESH_RATE = 20;
 	private int day = 0;
-	private int epochLength, changeEpoch, foodPerEpoch;
+	private double fitness = 0.0;
+	private int epochLength, changeEpoch;
+	private int foodPerEpoch = 0; 
 	private boolean isEpochBased, visibleMatrix;
 	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals;
@@ -43,7 +45,7 @@ public class GraphicsCore {
 	private ArrayList<Poisson> poissons;
     private CollisionManager collisionManager;
     private DynamicsCore dynamicsCore;
-    private Label l_day, l_ind, l_food, l_obs, l_epoch, l_foodPerEpoch;
+    private Label l_day, l_ind, l_food, l_obs, l_epoch, l_foodPerEpoch, l_fitness;
     private HashMap<String, Widget> state;
 
 	public GraphicsCore(ArrayList<Individual> individuals,
@@ -72,6 +74,7 @@ public class GraphicsCore {
 		this.state = state;
 		
 		l_day = new Label("Day: " + day);
+		l_fitness = new Label("Fitness " + fitness);
 		l_foodPerEpoch = new Label(foodPerEpoch + " foods eaten this epoch");
 		l_epoch = new Label("Epoch: " + (int)(day/epochLength));
 		l_ind = new Label("Alive individuals: " + individuals.size());
@@ -133,6 +136,7 @@ public class GraphicsCore {
 		RootPanel.get("statisticsholder").add(randomInd);
 		RootPanel.get("statisticsholder").add(allInd);
 		RootPanel.get("statisticsholder").add(l_day);
+		RootPanel.get("statisticsholder").add(l_fitness);
 		RootPanel.get("statisticsholder").add(l_foodPerEpoch);
 		RootPanel.get("statisticsholder").add(l_epoch);
 		RootPanel.get("statisticsholder").add(l_ind);
@@ -210,9 +214,10 @@ public class GraphicsCore {
 			}
 			if(day%epochLength==0) {
 				foodPerEpoch = StatisticsCore.foodEaten(individuals);
-				RootPanel.get().add(new Label(foodPerEpoch + ""));
+				fitness = foodPerEpoch/(foods.size()+foodPerEpoch);
+				RootPanel.get().add(new Label(foodPerEpoch + " "));
 				individuals = EvolutionCore.EpochReproduction(individuals);
-			}	
+			}
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
 		}
 		
@@ -234,6 +239,7 @@ public class GraphicsCore {
 	
 	private void updateStatistics() {
 		l_day.setText("Day: " + day);
+		l_fitness.setText("Fitness: " + fitness);
 		l_foodPerEpoch.setText(foodPerEpoch + " foods eaten this epoch");
 		l_epoch.setText("Epoch: " + (int)(day/epochLength));
 		l_ind.setText("Alive individuals: " + individuals.size());
