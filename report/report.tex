@@ -77,9 +77,7 @@ Genetic algorithms (GAs) are a common tool to find solutions to complex problems
 Several approaches have been proposed in order to allow GAs to maintain the population diversity, two common methods are \emph{random immigrants} and \emph{triggered hypermutation} [1][2].
 
 \section{Environment}
-Our test environment consists of a simple map, containing obstacles, food and enemies, and is randomely initialized. The goal of the population is to find paths around the obstacles, and learn to avoid areas where enemies reside. The element of food is added in order to encourage a higher degree of exploration by the population.
-
-A dynamic environment is created by changing the positions of the elements in the map. This can be done in many ways, and we settle for three different methods of changing the map.
+Our test environment consists of a simple map, containing food, and is randomely initialized. The goal of the population is to find paths leading to areas where food is distributed. A dynamic environment is created by changing the positions of the food in the map. This can be done in many ways, and we settle for three different methods of changing the map.
 
 \begin{itemize}
 
@@ -110,20 +108,27 @@ With random immigrants, these new individuals are randomely created (the same wa
 With elitism-based immigrants, the individuals with high fitness are remembered. When the total fitness decreases (potentially due to changes in the environment), individuals with low fitness are removed and individuals from this elite-set are reintroduced.
 
 \section{Genome representation}
-The behavior of an individual depends on its genome, which decides how it moves on the map. The genome is represented as a matrix of vector values where each position in the matrix represents a part of the map, and the vector stored at the position is the direction in which the individual will move.
+The behavior of an individual depends on its genome, which decides how it moves on the map. The genome is represented as a matrix of vector values where each position in the matrix represents a part of the map, and the vector stored at the position is the direction in which the individual will move. For a matrix of size $m \times n$, this is represented as m arrays of size n.
 
 Consider a map of size $50m \times 50n$ and a matrix of size $m \times n$. Then every matrix position will represent a $50\times50$ square in the map. When the individual has a position inside that square, it's speed and direction will be given by the vector stored in that position of the matrix.
 
-\section{Crossover}
-Rank selection
-1-point
-2-point
-uniform
-always mutation
+\section{Selection and Crossover strategies}
+Two different crossover types where used, epoch and collision learning. In collision learning, the individuals crossover when they collide in the map, provided they have collected some ammount of food. Two new individuals are created by one either one-point, two-point or uniform crossover.
 
+In epoch learning, the individuals search the map for a fixed set of updates, one epoch. At the end of the epoch, individuals were recombinated and mutated depending on the settings used. The selection method used worked by first sorting the list of individuals, with the highest fitness first, using the number of food collected as a measure of the fitness. Then, each individual from the beginning crosses over with a probability $\alpha$ with the first individual. If not, the individual crosses over with the same probability $\alpha$ with the second individual, and so on. In general, only the best half of the individuals reproduce.
 
 
 \section{Discussion}
+\subsection{genome representation}
+The genome is represented as an array of arrays. During a crossover, assume 1-point, the crossover will be row by row until the point of crossover, but could not be column by column. This means the representation will be much more effective if the target (the food) lies in the top of the map than in the bottom. See illustration.
+
+\begin{figure}
+  \caption{}
+  \centering
+    \includegraphics[width=0.5\textwidth]{BottomLeft.png}
+    \includegraphics[width=0.5\textwidth]{TopRight.png}
+\end{figure}
+
 
 \section{Conclusions}
 
