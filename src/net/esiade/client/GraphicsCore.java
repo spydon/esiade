@@ -214,8 +214,8 @@ public class GraphicsCore {
 			}
 			if(day%epochLength==0) {
 				foodPerEpoch = StatisticsCore.foodEaten(individuals);
-				fitness = foodPerEpoch/(foods.size()+foodPerEpoch);
-				RootPanel.get().add(new Label(foodPerEpoch + " "));
+				fitness = (foodPerEpoch/(foods.size()+foodPerEpoch));
+				RootPanel.get().add(new Label(foodPerEpoch + " " + fitness + " " + foods.size()+foodPerEpoch));
 				individuals = EvolutionCore.EpochReproduction(individuals);
 			}
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));

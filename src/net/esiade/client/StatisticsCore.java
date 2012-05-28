@@ -36,7 +36,6 @@ public class StatisticsCore {
 		db.center();
 	}
 
-
 	/**
 	 * This function creates a popup, showing the generation number and the amount of food in an individual.
 	 * @param i The individual for which to show statistics
