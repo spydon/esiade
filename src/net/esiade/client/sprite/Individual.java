@@ -164,7 +164,10 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	public int compareTo(Individual i) {
 		return i.getFood()-getFood();
 	}
-
+	
+	public String toString() {
+		return "Food: " + food + " Generation: " + generation;
+	}
 
 	public int getSelfReproductionLimit() {
 		return selfReproductionLimit;
