@@ -27,7 +27,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
  * @author spydon
  *
  */
-public class GraphicsCore {
+public class UpdateCore {
 	private Timer timer;
 	private Canvas canvas, canvasBuffer;
 	private Context2d context, contextBuffer;
@@ -48,7 +48,7 @@ public class GraphicsCore {
     private Label l_day, l_ind, l_food, l_obs, l_epoch, l_foodPerEpoch, l_fitness;
     private HashMap<String, Widget> state;
 
-	public GraphicsCore(ArrayList<Individual> individuals,
+	public UpdateCore(ArrayList<Individual> individuals,
 						ArrayList<Obstacle> obstacles,
 						ArrayList<Food> foods,
 						ArrayList<Poisson> poissons,
@@ -59,8 +59,8 @@ public class GraphicsCore {
 						boolean isEpochBased,
 						boolean visibleMatrix,
 						HashMap<String, Widget> state) {
-		GraphicsCore.WIDTH = Esiade.WIDTH;
-		GraphicsCore.HEIGHT = Esiade.HEIGHT;
+		UpdateCore.WIDTH = Esiade.WIDTH;
+		UpdateCore.HEIGHT = Esiade.HEIGHT;
 		this.dynamicsCore = dynamicsCore;
 		this.individuals = individuals;
 		this.obstacles = obstacles;
