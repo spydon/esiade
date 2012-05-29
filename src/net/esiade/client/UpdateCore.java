@@ -34,10 +34,10 @@ public class UpdateCore {
 	public static int WIDTH, HEIGHT;
 	private final int REFRESH_RATE = 20;
 	private int day = 0;
-	private String fitness;
+	private double fitness = 0.0;
 	private int epochLength, changeEpoch;
-	private int foodPerEpoch = 0; 
-	private boolean isEpochBased, visibleMatrix;
+	private int foodPerEpoch = 0;
+	private boolean isEpochBased, visibleMatrix, trigHypMut;
 	private final CssColor REDRAW_COLOR = CssColor.make("red");
     private ArrayList<Individual> individuals;
     private ArrayList<Obstacle> obstacles;
@@ -47,6 +47,8 @@ public class UpdateCore {
     private DynamicsCore dynamicsCore;
     private Label l_day, l_ind, l_food, l_obs, l_epoch, l_foodPerEpoch, l_fitness;
     private HashMap<String, Widget> state;
+    private double[] fitnessHistory = {0.0,0.0,0.0,0.0};
+    private double fitnessMed = 0.0;
 
 	public UpdateCore(ArrayList<Individual> individuals,
 						ArrayList<Obstacle> obstacles,
@@ -58,6 +60,7 @@ public class UpdateCore {
 						int epochLength,
 						boolean isEpochBased,
 						boolean visibleMatrix,
+						boolean trigHypMut,
 						HashMap<String, Widget> state) {
 		UpdateCore.WIDTH = Esiade.WIDTH;
 		UpdateCore.HEIGHT = Esiade.HEIGHT;
@@ -71,6 +74,7 @@ public class UpdateCore {
 		this.changeEpoch = changeEpoch;
 		this.isEpochBased = isEpochBased;
 		this.visibleMatrix = visibleMatrix;
+		this.trigHypMut = trigHypMut;
 		this.state = state;
 		
 		l_day = new Label("Day: " + day);
@@ -214,8 +218,22 @@ public class UpdateCore {
 			}
 			if(day%epochLength==0) {
 				foodPerEpoch = StatisticsCore.foodEaten(individuals);
-				fitness = foodPerEpoch + "/" + (foods.size()+foodPerEpoch);
-				//RootPanel.get().add(new Label(foodPerEpoch + " " + fitness + " " + foods.size()+foodPerEpoch));
+				double fpe = foodPerEpoch;
+				double foodSize = foods.size();
+				fitness = fpe/(foodSize+fpe);
+
+				fitnessHistory[(day%epochLength)%4] = fpe/(foodSize+fpe);
+				double sum = 0;
+				for(int x = 0; x < fitnessHistory.length; x++)
+					sum+=fitnessHistory[x];
+				double newFitnessMed = sum/fitnessHistory.length;
+				
+				if(0.8*newFitnessMed <= fitnessMed)
+					EvolutionCore.setChangeMutation(0.1);
+				else
+					EvolutionCore.setChangeMutation(-0.02);
+				
+				fitnessMed = newFitnessMed;
 				individuals = EvolutionCore.EpochReproduction(individuals);
 			}
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));

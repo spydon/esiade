@@ -246,4 +246,9 @@ public class EvolutionCore {
 				if (Random.nextDouble() < mRate)
 					i.genome[x][y] = new Vector2D(i.getJumpLength());
 	}
+	
+	public static void setChangeMutation(double change) {
+		if(mRate+change<1 && mRate+change > 0)
+			EvolutionCore.mRate+=change;
+	}
 }

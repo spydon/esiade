@@ -41,7 +41,7 @@ public class Esiade implements EntryPoint {
     				tb_foodrepr, tb_scalespeed, tb_poisson, tb_lambda, tb_elitism,
     				tb_chance, tb_epochlength, tb_numImmigrants, tb_envepochs;
     private ListBox lb_reprtype, lb_crossover, lb_environment, lb_itype;
-    private CheckBox cb_visiblematrix;
+    private CheckBox cb_visiblematrix, cb_trighypermut;
     private Button run;
 	public static int WIDTH = 500, HEIGHT = 500;
 
@@ -82,6 +82,7 @@ public class Esiade implements EntryPoint {
 		lb_crossover = (ListBox)state.get("lb_crossover");
 		lb_environment = (ListBox)state.get("lb_environment");
 		cb_visiblematrix = (CheckBox)state.get("cb_visiblematrix");
+		cb_trighypermut = (CheckBox)state.get("cb_trighypermut");
 		drawSettingsUI();
 	}
 	
@@ -106,6 +107,7 @@ public class Esiade implements EntryPoint {
 		int changeEpoch = (int)getNumber(tb_envepochs.getText());
 		boolean isEpochBased = lb_reprtype.getItemText(lb_reprtype.getSelectedIndex()).equals("Epoch based");
 		boolean visibleMatrix = cb_visiblematrix.getValue();
+		boolean trigHyperMut = cb_trighypermut.getValue();
 		double scaleSpeed = getNumber(tb_scalespeed.getText());
 		RootPanel.get("settingsholder").clear();
 		
@@ -114,7 +116,6 @@ public class Esiade implements EntryPoint {
 			
 		double jumpLength = scaleSpeed*Math.sqrt((WIDTH/EvolutionCore.WIDTH)*(HEIGHT/EvolutionCore.HEIGHT));
 		
-		//new Vector2D(0.0,0.0) instead of new Vector(WIDTH, HEIGHT)
 		for(int x = 0; x < numInd; x++)
 			individuals.add(new Individual(new Vector2D(0.0,0.0), new Vector2D(jumpLength), EvolutionCore.getRandomGenome(jumpLength), 
 											(int)getNumber(tb_velocitycheck.getText()), getNumber(tb_maptrust.getText()), 
@@ -131,7 +132,7 @@ public class Esiade implements EntryPoint {
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
 		DynamicsCore dynamicsCore = new DynamicsCore(getEType(lb_environment.getItemText(lb_environment.getSelectedIndex())));
 		saveState();
-		new UpdateCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, state);
+		new UpdateCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, trigHyperMut, state);
 	}
 	
 	private void saveState() {
@@ -164,6 +165,7 @@ public class Esiade implements EntryPoint {
 		state.put("lb_environment", lb_environment);
 		state.put("lb_itype", lb_itype);
 		state.put("cb_visiblematrix", cb_visiblematrix);
+		state.put("cb_trighypermut", cb_trighypermut);
 	}
 	
 	private double getNumber(String parse) {
@@ -297,6 +299,7 @@ public class Esiade implements EntryPoint {
     				tb_selfrepr.setEnabled(false); 
     				tb_foodrepr.setEnabled(false);
     				tb_foodstart.setEnabled(false);
+    				cb_trighypermut.setEnabled(true);
     				tb_foodstart.setText("0");
     				tb_elitism.setEnabled(true);
     				tb_chance.setEnabled(true);
@@ -307,7 +310,8 @@ public class Esiade implements EntryPoint {
     				tb_foodrepr.setEnabled(true);
     				tb_elitism.setEnabled(false);
     				tb_chance.setEnabled(false);
-    				tb_epochlength.setEnabled(false);    
+    				tb_epochlength.setEnabled(false); 
+    				cb_trighypermut.setEnabled(false);
     				tb_foodstart.setText("9");
 				}
 			}
@@ -335,6 +339,7 @@ public class Esiade implements EntryPoint {
 		lb_environment.addItem("Static");
 
 		cb_visiblematrix = new CheckBox();
+		cb_trighypermut = new CheckBox();
 		
 		drawSettingsUI();
 		
@@ -423,6 +428,9 @@ public class Esiade implements EntryPoint {
 		
 		RootPanel.get("settingsholder").add(new Label("Visible matrix: "));
 		RootPanel.get("settingsholder").add(cb_visiblematrix);
+		
+		RootPanel.get("settingsholder").add(new Label("Triggered hypermutation: "));
+		RootPanel.get("settingsholder").add(cb_trighypermut);
 
 		run = new Button("Run simulation!!!");
 		run.addClickHandler(new ClickHandler() {
