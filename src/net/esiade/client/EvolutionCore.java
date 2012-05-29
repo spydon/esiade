@@ -106,9 +106,13 @@ public class EvolutionCore {
 	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
 		ArrayList<Individual> elites = new ArrayList<Individual>(0);
 		Collections.sort(individuals);
+		
+		Vector2D v = new Vector2D(Esiade.WIDTH-individuals.get(0).getWidth(), Esiade.HEIGHT-individuals.get(0).getHeight());
 
-//		for(Individual i : individuals)
-//			RootPanel.get().add(new Label(individuals.indexOf(i) + " " + i.getFood()));
+		for(Individual i : individuals) {
+			i.resetFood();
+			i.position = v.clone();
+		}
 		
 		Individual hE = individuals.get(0).clone();
 		hE.resetFood();
@@ -120,34 +124,6 @@ public class EvolutionCore {
 			elites.add(e);
 		}
 		
-//		int z = 0;
-//		int k = 0;
-//		while(k < copy.size()) {
-//			Individual i = copy.get(z);
-//			z++;
-//			k=k+2;
-//			for(Individual j : copy) {
-//				if((!i.equals(j) && Random.nextDouble() < chance) || 
-//						individuals.get(individuals.size()-1).equals(j)) {
-//					Individual in = i.clone();
-//					Individual jn = j.clone();
-//					Crossover(in, jn);
-//					in.position = new Vector2D(0.0,0.0);
-//					jn.position = new Vector2D(0.0,0.0);
-//					in.resetFood();
-//					jn.resetFood();
-//					individuals.set(individuals.size()-z, in);
-//					if(z+1<k)
-//						individuals.set(individuals.size()-z+1, jn);
-////					newIndividuals.add(i.clone());
-////					newIndividuals.add(j.clone());
-////					i.position = new Vector2D(Esiade.WIDTH-i.getWidth(),Esiade.HEIGHT-i.getHeight());
-////					j.position = new Vector2D(Esiade.WIDTH-j.getWidth(),Esiade.HEIGHT-j.getHeight());
-//					break;
-//				}
-//			}
-//		}
-		
 		ArrayList<Individual> newIndividuals = new ArrayList<Individual>(0);
 		int z = 0;
 		while(newIndividuals.size() < individuals.size()) {
@@ -157,10 +133,6 @@ public class EvolutionCore {
 				if((!i.equals(j) && Random.nextDouble() < chance) || 
 						individuals.get(individuals.size()-1).equals(j)) {
 					Crossover(i, j);
-					i.position = new Vector2D(0.0,0.0);
-					j.position = new Vector2D(0.0,0.0);
-					i.resetFood();
-					j.resetFood();
 					newIndividuals.add(i.clone());
 					newIndividuals.add(j.clone());
 //					i.position = new Vector2D(Esiade.WIDTH-i.getWidth(),Esiade.HEIGHT-i.getHeight());
@@ -172,28 +144,30 @@ public class EvolutionCore {
 			newIndividuals.remove(newIndividuals.size()-1);
 		
 		for(int x = 0; x<individuals.size(); x++)
-			individuals.set(x, newIndividuals.get(x));
-//		
-//		individuals = newIndividuals;
-		
+			individuals.set(x, individuals.get(x));
+
 		for (int x = 1;x <= numImmigrants;x++) {
 			if (iType == IType.RANDOM) {
 				Individual immigrant = individuals.get(individuals.size()-elites.size()-x);
+				immigrant.position = v.clone();
 				immigrant.genome = getRandomGenome(immigrant.getJumpLength());
 				immigrant.setImage("./immigrant.png");				
 			} else if (iType == IType.ELITE) {
-				individuals.set(individuals.size()-elites.size()-x, getRandomElite());
+				Individual e = getRandomElite();
+				e.position = v.clone();
+				individuals.set(individuals.size()-elites.size()-x, e);
 			}
 		}
 		
 		int x = 1;
 		for (Individual e : elites) {
 			e.resetFood();
+			e.position = v.clone();
 			e.setImage("./elite.png");
 			individuals.set(individuals.size()-x, e);
 			x++;
 		}
-			
+		
 		return individuals;
 	}
 	

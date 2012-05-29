@@ -1,6 +1,7 @@
 package net.esiade.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.esiade.client.DynamicsCore.EType;
 import net.esiade.client.EvolutionCore.CType;
@@ -10,8 +11,6 @@ import net.esiade.client.sprite.Individual;
 import net.esiade.client.sprite.Obstacle;
 
 import com.google.gwt.core.client.EntryPoint;
-import java.util.HashMap;
-
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -84,7 +83,6 @@ public class Esiade implements EntryPoint {
 		lb_environment = (ListBox)state.get("lb_environment");
 		cb_visiblematrix = (CheckBox)state.get("cb_visiblematrix");
 		drawSettingsUI();
-//		makeSettingsUI();
 	}
 	
 	public void onModuleLoad() {
@@ -133,7 +131,7 @@ public class Esiade implements EntryPoint {
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
 		DynamicsCore dynamicsCore = new DynamicsCore(getEType(lb_environment.getItemText(lb_environment.getSelectedIndex())));
 		saveState();
-		new GraphicsCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, state);
+		new UpdateCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, state);
 	}
 	
 	private void saveState() {
@@ -279,11 +277,11 @@ public class Esiade implements EntryPoint {
 		tb_height.setWidth("30px");
 		
 		tb_matrix_x = new TextBox();
-		tb_matrix_x.setText("25");
+		tb_matrix_x.setText("8");
 		tb_matrix_x.setMaxLength(4);
 		tb_matrix_x.setWidth("30px");
 		tb_matrix_y = new TextBox();
-		tb_matrix_y.setText("25");
+		tb_matrix_y.setText("8");
 		tb_matrix_y.setMaxLength(4);
 		tb_matrix_y.setWidth("30px");
 		
@@ -298,6 +296,8 @@ public class Esiade implements EntryPoint {
     				tb_starve.setEnabled(false);
     				tb_selfrepr.setEnabled(false); 
     				tb_foodrepr.setEnabled(false);
+    				tb_foodstart.setEnabled(false);
+    				tb_foodstart.setText("0");
     				tb_elitism.setEnabled(true);
     				tb_chance.setEnabled(true);
     				tb_epochlength.setEnabled(true);
@@ -307,13 +307,16 @@ public class Esiade implements EntryPoint {
     				tb_foodrepr.setEnabled(true);
     				tb_elitism.setEnabled(false);
     				tb_chance.setEnabled(false);
-    				tb_epochlength.setEnabled(false);    				
+    				tb_epochlength.setEnabled(false);    
+    				tb_foodstart.setText("9");
 				}
 			}
 		});
 		tb_starve.setEnabled(false);
 		tb_selfrepr.setEnabled(false); 
 		tb_foodrepr.setEnabled(false);
+		tb_foodstart.setEnabled(false);
+		tb_foodstart.setText("0");
 		
 		lb_itype = new ListBox();
 		lb_itype.addItem("Random");

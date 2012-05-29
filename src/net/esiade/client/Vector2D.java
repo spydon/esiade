@@ -84,7 +84,7 @@ public class Vector2D {
  
     /**
      * Calculate the distance between 2 vector by using Pythagoras' formula.
-     *
+     *"./immigrant.png"
      * @param vector2d
      *            The other vector.
      * @returns The distance between these 2 vectors as a int.
