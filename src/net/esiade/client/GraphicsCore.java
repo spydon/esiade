@@ -34,7 +34,7 @@ public class GraphicsCore {
 	public static int WIDTH, HEIGHT;
 	private final int REFRESH_RATE = 20;
 	private int day = 0;
-	private double fitness = 0.0;
+	private String fitness;
 	private int epochLength, changeEpoch;
 	private int foodPerEpoch = 0; 
 	private boolean isEpochBased, visibleMatrix;
@@ -214,8 +214,8 @@ public class GraphicsCore {
 			}
 			if(day%epochLength==0) {
 				foodPerEpoch = StatisticsCore.foodEaten(individuals);
-				fitness = (foodPerEpoch/(foods.size()+foodPerEpoch));
-				RootPanel.get().add(new Label(foodPerEpoch + " " + fitness + " " + foods.size()+foodPerEpoch));
+				fitness = foodPerEpoch + "/" + (foods.size()+foodPerEpoch);
+				//RootPanel.get().add(new Label(foodPerEpoch + " " + fitness + " " + foods.size()+foodPerEpoch));
 				individuals = EvolutionCore.EpochReproduction(individuals);
 			}
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));

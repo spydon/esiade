@@ -106,10 +106,12 @@ public class EvolutionCore {
 	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
 		ArrayList<Individual> elites = new ArrayList<Individual>(0);
 		Collections.sort(individuals);
+		
+		Vector2D v = new Vector2D(Esiade.WIDTH-individuals.get(0).getWidth(), Esiade.HEIGHT-individuals.get(0).getHeight());
 
 		for(Individual i : individuals) {
 			i.resetFood();
-			i.position = new Vector2D(0.0,0.0);
+			i.position = v.clone();
 		}
 		
 		Individual hE = individuals.get(0).clone();
@@ -147,21 +149,25 @@ public class EvolutionCore {
 		for (int x = 1;x <= numImmigrants;x++) {
 			if (iType == IType.RANDOM) {
 				Individual immigrant = individuals.get(individuals.size()-elites.size()-x);
+				immigrant.position = v.clone();
 				immigrant.genome = getRandomGenome(immigrant.getJumpLength());
 				immigrant.setImage("./immigrant.png");				
 			} else if (iType == IType.ELITE) {
-				individuals.set(individuals.size()-elites.size()-x, getRandomElite());
+				Individual e = getRandomElite();
+				e.position = v.clone();
+				individuals.set(individuals.size()-elites.size()-x, e);
 			}
 		}
 		
 		int x = 1;
 		for (Individual e : elites) {
 			e.resetFood();
+			e.position = v.clone();
 			e.setImage("./elite.png");
 			individuals.set(individuals.size()-x, e);
 			x++;
 		}
-			
+		
 		return individuals;
 	}
 	
