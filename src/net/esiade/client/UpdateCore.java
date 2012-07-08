@@ -3,7 +3,9 @@
  */
 package net.esiade.client;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
@@ -49,6 +51,9 @@ public class UpdateCore {
     private HashMap<String, Widget> state;
     private double[] fitnessHistory = {0.0,0.0,0.0,0.0};
     private double fitnessMed = 0.0;
+    private int lastSpawned = 0;
+    private ArrayList<Label> stats = new ArrayList<Label>();
+    private EvolutionCore evolutionCore;
 
 	public UpdateCore(ArrayList<Individual> individuals,
 						ArrayList<Obstacle> obstacles,
@@ -56,6 +61,7 @@ public class UpdateCore {
 						ArrayList<Poisson> poissons,
 						CollisionManager collisionManager, 
 						DynamicsCore dynamicsCore,
+						EvolutionCore evolutionCore,
 						int changeEpoch,
 						int epochLength,
 						boolean isEpochBased,
@@ -65,6 +71,7 @@ public class UpdateCore {
 		UpdateCore.WIDTH = Esiade.WIDTH;
 		UpdateCore.HEIGHT = Esiade.HEIGHT;
 		this.dynamicsCore = dynamicsCore;
+		this.evolutionCore = evolutionCore;
 		this.individuals = individuals;
 		this.obstacles = obstacles;
 		this.foods = foods;
@@ -102,6 +109,8 @@ public class UpdateCore {
 		context.setFillStyle(REDRAW_COLOR);
 		context.fillRect(0, 0, WIDTH, HEIGHT);
 		contextBuffer = canvasBuffer.getContext2d();
+		
+		stats.add(new Label(""));
 		
 		Button randomInd = new Button("Random individual stats");
 		randomInd.addClickHandler(new ClickHandler() {
@@ -221,7 +230,17 @@ public class UpdateCore {
 				double fpe = foodPerEpoch;
 				double foodSize = foods.size();
 				fitness = fpe/(foodSize+fpe);
-
+				foods.clear();
+				Label CurrentRow = stats.get(stats.size()-1);
+				RootPanel.get().remove(CurrentRow);
+				long l = (int)Math.round(fitness * 100); // truncates
+				double r = l/100.0;
+				if(CurrentRow.getText().length() == 1 || CurrentRow.getText().length() == 0)
+					CurrentRow.setText(CurrentRow.getText() + r);
+				else
+					CurrentRow.setText(CurrentRow.getText() + ", " + r);
+				RootPanel.get().add(CurrentRow);
+				
 				fitnessHistory[(day%epochLength)%4] = fpe/(foodSize+fpe);
 				double sum = 0;
 				for(int x = 0; x < fitnessHistory.length; x++)
@@ -229,12 +248,20 @@ public class UpdateCore {
 				double newFitnessMed = sum/fitnessHistory.length;
 				
 				if(0.8*newFitnessMed <= fitnessMed)
-					EvolutionCore.setChangeMutation(0.1);
+					evolutionCore.setChangeMutation(0.1);
 				else
-					EvolutionCore.setChangeMutation(-0.02);
+					evolutionCore.setChangeMutation(-0.02);
 				
 				fitnessMed = newFitnessMed;
-				individuals = EvolutionCore.EpochReproduction(individuals);
+				individuals = evolutionCore.EpochReproduction(individuals);
+				if(stats.size() == 10)
+					individuals.clear();
+				if(day/epochLength==40) {
+					stats.add(new Label(";"));
+					day = 0;
+					for(Individual i:individuals)
+						i.clearBrain();
+				}// [clearBrain || i <- Individuals]
 			}
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
 		}

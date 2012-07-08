@@ -18,7 +18,7 @@ public class EvolutionCore {
 	private static double mRate, cRate, chance;
 	private static CType type;
 	private static IType iType;
-	private static ArrayList<Individual> historicElites = new ArrayList<Individual>(0);
+	private ArrayList<Individual> historicElites = new ArrayList<Individual>(0);
 	
 	/**
 	 * @param width The width of the map matrix
@@ -49,7 +49,7 @@ public class EvolutionCore {
 	/**
 	 * @return This function returns a genome with all vectors set at random.
 	 */
-	public static Vector2D[][] getRandomGenome(double jumpLength) {
+	public Vector2D[][] getRandomGenome(double jumpLength) {
 		Vector2D[][] genome = new Vector2D[WIDTH][HEIGHT];
 		for (int x = 0;x < WIDTH;x++)
 			for (int y = 0; y < HEIGHT;y++)
@@ -63,15 +63,19 @@ public class EvolutionCore {
 	 * @param i2 The second individual
 	 * @param x The x-coordinate in the matrix 
 	 * @param y The y-coordinate in the matrix
+	 * @return 
 	 * 
 	 */
-	public static void SwitchVectors(Individual i1, Individual i2, int x, int y) {
-		Vector2D temp = i1.genome[x][y].clone();
-		i1.genome[x][y] = i2.genome[x][y].clone();
-		i2.genome[x][y] = temp;
+	public void SwitchVectors(Individual i1, Individual i2, int x, int y) {
+		Individual temp = i1.clone();
+		i1.setGene(x, y, i2.getGenome()[x][y].clone());
+		i2.setGene(x, y, temp.getGenome()[x][y].clone());
+		i1.setGenome(null);
+		RootPanel.get().add(new Label("EqualInd t-1: " + (temp.getGenome() == i1.getGenome())));
+		RootPanel.get().add(new Label("EqualInd t-2: " + (temp.getGenome() == i2.getGenome())));
 	}
 	
-	public static void CollisionCrossover(Individual i1, Individual i2) {
+	public void CollisionCrossover(Individual i1, Individual i2) {
 		if(i1.getReproductionLimit() <= i1.getFood() && i2.getReproductionLimit() <= i2.getFood())
 			Crossover(i1,i2);
 	}
@@ -81,7 +85,7 @@ public class EvolutionCore {
 	 * @param i1 The first individual
 	 * @param i2 The second individual
 	 */
-	public static Individual[] Crossover(Individual i1, Individual i2) {
+	public Individual[] Crossover(Individual i1, Individual i2) {
 		if (Random.nextDouble() < cRate) {
 			if (type == CType.ONEPOINT)
 				OnePointCrossover(i1, i2);
@@ -103,12 +107,13 @@ public class EvolutionCore {
 		return l;
 	}
 	
-	public static ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
+	public ArrayList<Individual> EpochReproduction(ArrayList<Individual> individuals) {
 		ArrayList<Individual> elites = new ArrayList<Individual>(0);
 		Collections.sort(individuals);
 		
-		Vector2D v = new Vector2D(Esiade.WIDTH-individuals.get(0).getWidth(), Esiade.HEIGHT-individuals.get(0).getHeight());
-
+		//Vector2D v = new Vector2D(Esiade.WIDTH-individuals.get(0).getWidth(), Esiade.HEIGHT-individuals.get(0).getHeight());
+		Vector2D v = new Vector2D(5, 5);
+		
 		for(Individual i : individuals) {
 			i.resetFood();
 			i.position = v.clone();
@@ -132,9 +137,11 @@ public class EvolutionCore {
 			for(Individual j : individuals)
 				if((!i.equals(j) && Random.nextDouble() < chance) || 
 						individuals.get(individuals.size()-1).equals(j)) {
-					Crossover(i, j);
-					newIndividuals.add(i.clone());
-					newIndividuals.add(j.clone());
+					Individual i2 = i.clone();
+					Individual j2 = j.clone();
+					Crossover(i2, j2);
+					newIndividuals.add(i2);
+					newIndividuals.add(j2);
 //					i.position = new Vector2D(Esiade.WIDTH-i.getWidth(),Esiade.HEIGHT-i.getHeight());
 //					j.position = new Vector2D(Esiade.WIDTH-j.getWidth(),Esiade.HEIGHT-j.getHeight());
 					break;
@@ -150,7 +157,7 @@ public class EvolutionCore {
 			if (iType == IType.RANDOM) {
 				Individual immigrant = individuals.get(individuals.size()-elites.size()-x);
 				immigrant.position = v.clone();
-				immigrant.genome = getRandomGenome(immigrant.getJumpLength());
+				immigrant.setGenome(getRandomGenome(immigrant.getJumpLength()));
 				immigrant.setImage("./immigrant.png");				
 			} else if (iType == IType.ELITE) {
 				Individual e = getRandomElite();
@@ -171,14 +178,14 @@ public class EvolutionCore {
 		return individuals;
 	}
 	
-	public static Individual getRandomElite(){
+	public Individual getRandomElite(){
 		int number = Random.nextInt(historicElites.size());
 		Individual elite = historicElites.get(number).clone();
 		elite.setImage("./immigrant.png");
 		return historicElites.get(number).clone();
 	}
 	
-	public static Individual SelfReproduction(Individual i) {
+	public Individual SelfReproduction(Individual i) {
 		Individual i2 = i.clone();
 		i2.increaseGen();
 		//i2.position = new Vector2D(WIDTH, HEIGHT);
@@ -194,7 +201,7 @@ public class EvolutionCore {
 	 * @param I1 The first individual
 	 * @param I2 The second individual
 	 */
-	private static void OnePointCrossover(Individual I1, Individual I2){
+	private void OnePointCrossover(Individual I1, Individual I2){
 		int randomPoint = Random.nextInt(WIDTH*HEIGHT);
 		for(int y = 0;y < HEIGHT; y++)
 			for (int x = 0; x < WIDTH; x++)
@@ -210,7 +217,7 @@ public class EvolutionCore {
 	 * One point crossover. The two individuals will be modified to two new individuals, in a 2-point crossover fashion. 
 	 * @param I1 The first individual
 	 */
-	private static void TwoPointCrossover(Individual I1, Individual I2){
+	private void TwoPointCrossover(Individual I1, Individual I2){
 		int randomPoint1 = Random.nextInt(WIDTH*HEIGHT);
 		int randomPoint2 = Random.nextInt(WIDTH*HEIGHT-randomPoint1);
 		
@@ -226,28 +233,33 @@ public class EvolutionCore {
 	
 	/**
 	 * One point crossover. The two individuals will be modified to two new individuals, in a uniform crossover fashion. 
-	 * @param I1 The first individual
-	 * @param I2 The second individual
+	 * @param i1 The first individual
+	 * @param i2 The second individual
 	 */
-	private static void UniformCrossover(Individual I1, Individual I2){
+	private void UniformCrossover(Individual i1, Individual i2){
+		Individual temp1 = i1.clone();
+		Individual temp2 = i2.clone();
 		for(int y = 0;y<HEIGHT;y++)
 			for(int x=0;x<WIDTH;x++)
-				if (Random.nextDouble() > 0.5)
-					SwitchVectors(I1, I2, x, y);
+				SwitchVectors(i1, i2, x, y);
+//				if (Random.nextDouble() > 0.5)
+//					SwitchVectors(i1, i2, x, y);
+		RootPanel.get().add(new Label("Equal: " + (temp2.getGenome() == i1.getGenome())));
+		RootPanel.get().add(new Label("Equal: " + (temp1.getGenome() == i1.getGenome())));
 	}
 	
 	/**
 	 * This function will change a vector to a random new vector, with the probability set as mutation rate, see mRate.
 	 * @param I The individual to mutate.
 	 */
-	private static void Mutation(Individual i){
+	private void Mutation(Individual i){
 		for (int y = 0;y < HEIGHT;y++)
 			for (int x=0;x< WIDTH;x++)
 				if (Random.nextDouble() < mRate)
-					i.genome[x][y] = new Vector2D(i.getJumpLength());
+					i.getGenome()[x][y] = new Vector2D(i.getJumpLength());
 	}
 	
-	public static void setChangeMutation(double change) {
+	public void setChangeMutation(double change) {
 		if(mRate+change<1 && mRate+change > 0)
 			EvolutionCore.mRate+=change;
 	}

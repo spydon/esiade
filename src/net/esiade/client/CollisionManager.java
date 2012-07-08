@@ -15,6 +15,7 @@ public class CollisionManager {
 	private ArrayList<Obstacle> obstacles;
 	private ArrayList<Food> foods;
 	private final int WIDTH, HEIGHT;
+	private EvolutionCore evolutionCore;
 	
 	/**
 	 * @param WIDTH The width of the map
@@ -26,12 +27,14 @@ public class CollisionManager {
 	public CollisionManager(int WIDTH, int HEIGHT,
 							ArrayList<Individual> individuals, 
 							ArrayList<Obstacle> obstacles,
-							ArrayList<Food> foods) {
+							ArrayList<Food> foods,
+							EvolutionCore evolutionCore) {
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
 		this.individuals = individuals;
 		this.obstacles = obstacles;
 		this.foods = foods;
+		this.evolutionCore = evolutionCore; 
 	}
 	
 	/**
@@ -56,7 +59,7 @@ public class CollisionManager {
 							RootPanel.get().add(new Label("" + i));
 							RootPanel.get().add(new Label("" + i2));
 
-							EvolutionCore.CollisionCrossover(i, i2);
+							evolutionCore.CollisionCrossover(i, i2);
 						RootPanel.get().add(new Label("-----------------"));
 							RootPanel.get().add(new Label("" + i));
 							RootPanel.get().add(new Label("" + i2));
@@ -75,7 +78,7 @@ public class CollisionManager {
 				if(isCollision(i, f)) {
 					i.eat();
 					if(!isEpochBased && i.getFood() >= i.getSelfReproductionLimit()) 
-						individuals.add(EvolutionCore.SelfReproduction(i));
+						individuals.add(evolutionCore.SelfReproduction(i));
 					foods.remove(f);
 				}
 			}

@@ -43,6 +43,7 @@ public class Esiade implements EntryPoint {
     private ListBox lb_reprtype, lb_crossover, lb_environment, lb_itype;
     private CheckBox cb_visiblematrix, cb_trighypermut;
     private Button run;
+    private EvolutionCore evolutionCore;
 	public static int WIDTH = 500, HEIGHT = 500;
 
 	/**
@@ -91,7 +92,7 @@ public class Esiade implements EntryPoint {
 	}
 	
 	private void run() {
-		new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), 
+		evolutionCore = new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), 
 									getCType(lb_crossover.getValue(lb_crossover.getSelectedIndex())), (int)getNumber(tb_elitism.getText()), getNumber(tb_chance.getText()),
 									(int)getNumber(tb_numImmigrants.getText()), getIType(lb_itype.getValue(lb_itype.getSelectedIndex())));
 		Esiade.WIDTH = (int)getNumber(tb_width.getText());
@@ -117,11 +118,11 @@ public class Esiade implements EntryPoint {
 		double jumpLength = scaleSpeed*Math.sqrt((WIDTH/EvolutionCore.WIDTH)*(HEIGHT/EvolutionCore.HEIGHT));
 		
 		for(int x = 0; x < numInd; x++)
-			individuals.add(new Individual(new Vector2D(0.0,0.0), new Vector2D(jumpLength), EvolutionCore.getRandomGenome(jumpLength), 
+			individuals.add(new Individual(new Vector2D(0.0,0.0), new Vector2D(jumpLength), evolutionCore.getRandomGenome(jumpLength), 
 											(int)getNumber(tb_velocitycheck.getText()), getNumber(tb_maptrust.getText()), 
 											(int)getNumber(tb_starve.getText()), (int)getNumber(tb_selfrepr.getText()), 
 											(int)getNumber(tb_foodrepr.getText()), (int)getNumber(tb_foodstart.getText()),
-											jumpLength, 1));
+											jumpLength, 1, evolutionCore));
 		
 		for(int x = 0; x < numFood; x++)
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
@@ -129,10 +130,10 @@ public class Esiade implements EntryPoint {
 		for(int x = 0; x < numObs; x++)
 			obstacles.add(new Obstacle(new Vector2D(WIDTH,HEIGHT)));
 		
-		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods);
+		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods, evolutionCore);
 		DynamicsCore dynamicsCore = new DynamicsCore(getEType(lb_environment.getItemText(lb_environment.getSelectedIndex())));
 		saveState();
-		new UpdateCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, trigHyperMut, state);
+		new UpdateCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, evolutionCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, trigHyperMut, state);
 	}
 	
 	private void saveState() {
@@ -212,15 +213,15 @@ public class Esiade implements EntryPoint {
 		tb_ind.setText("15");
 		
 		tb_food = new TextBox();
-		tb_food.setText("20");
+		tb_food.setText("0");
 		
 		tb_poisson = new TextBox();
 		tb_poisson.setText("1");
 		tb_lambda = new TextBox();
-		tb_lambda.setText("4");
+		tb_lambda.setText("3");
 		
 		tb_foodspawn = new TextBox();
-		tb_foodspawn.setText("0.1");
+		tb_foodspawn.setText("0.03");
 		
 		tb_foodstart = new TextBox();
 		tb_foodstart.setText("9");

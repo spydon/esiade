@@ -24,8 +24,8 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	private int reproductionLimit;
 	private int foodStart;
 	private double jumpLength;
-	public Vector2D[][] genome;
-	
+	private Vector2D[][] genome;
+	private EvolutionCore evolutionCore;
 	/**
 	 * @param position Start position of the individual
 	 * @param velocity The velocity of the individual
@@ -42,7 +42,7 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	public Individual(Vector2D position, Vector2D velocity, Vector2D[][] genome, 
 					int veloCheck, double mapTrust,	int starveRate,
 					int selfReproductionLimit, int reproductionLimit, int foodStart, 
-					double jumpLength, int generation) {
+					double jumpLength, int generation, EvolutionCore evolutionCore) {
 		super("./individual.png", position, velocity);
 		this.velocity = genome[(int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH)]
 							[(int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT)];
@@ -56,6 +56,7 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 		this.jumpLength = jumpLength;
 		this.genome = genome;
 		this.generation = generation;
+		this.evolutionCore = evolutionCore;
 	}
 	
 
@@ -103,9 +104,17 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	public Individual clone() {
 		return new Individual(position, velocity, genome, veloCheck, 
 							mapTrust, starveRate, selfReproductionLimit, 
-							reproductionLimit, food, jumpLength, generation);
+							reproductionLimit, food, jumpLength, generation, evolutionCore);
 	}
 	
+	public void clearBrain() {
+		genome = evolutionCore.getRandomGenome(jumpLength);
+	}
+	
+	public Vector2D[][] getGenome() {
+		return genome;
+	}
+
 	/**
 	 * @return The number of food in an individual
 	 */
@@ -171,5 +180,13 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 
 	public int getSelfReproductionLimit() {
 		return selfReproductionLimit;
+	}
+	
+	public void setGenome(Vector2D[][] newGenome) {
+		genome = newGenome;
+	}
+	
+	public void setGene(int x, int y, Vector2D xy) {
+		genome[x][y] = xy.clone();
 	}
 }
