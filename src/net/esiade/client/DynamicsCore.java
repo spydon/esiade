@@ -2,9 +2,6 @@ package net.esiade.client;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-
 public class DynamicsCore {
 	public EType type;
 	private ArrayList<Poisson> poissons;

@@ -3,10 +3,7 @@
  */
 package net.esiade.client;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-
 import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
 import net.esiade.client.sprite.Obstacle;
@@ -33,7 +30,7 @@ public class UpdateCore {
 	private Timer timer;
 	private Canvas canvas, canvasBuffer;
 	private Context2d context, contextBuffer;
-	public static int WIDTH, HEIGHT;
+	public int WIDTH, HEIGHT;
 	private final int REFRESH_RATE = 20;
 	private int day = 0;
 	private double fitness = 0.0;
@@ -68,8 +65,8 @@ public class UpdateCore {
 						boolean visibleMatrix,
 						boolean trigHypMut,
 						HashMap<String, Widget> state) {
-		UpdateCore.WIDTH = Esiade.WIDTH;
-		UpdateCore.HEIGHT = Esiade.HEIGHT;
+		WIDTH = Esiade.WIDTH;
+		HEIGHT = Esiade.HEIGHT;
 		this.dynamicsCore = dynamicsCore;
 		this.evolutionCore = evolutionCore;
 		this.individuals = individuals;
@@ -183,8 +180,8 @@ public class UpdateCore {
 		day++;
 		contextBuffer.setFillStyle(CssColor.make("BLACK"));
 		contextBuffer.fillRect(0, 0, WIDTH, HEIGHT);
-		int cellWidth = WIDTH/EvolutionCore.WIDTH;
-		int cellHeight = HEIGHT/EvolutionCore.HEIGHT;
+		int cellWidth = WIDTH/evolutionCore.getMatrixWidth();
+		int cellHeight = HEIGHT/evolutionCore.getMatrixHeight();
 		
 	    contextBuffer.setLineWidth(1);
 	    contextBuffer.setStrokeStyle("RED");
@@ -253,7 +250,7 @@ public class UpdateCore {
 					evolutionCore.setChangeMutation(-0.02);
 				
 				fitnessMed = newFitnessMed;
-				individuals = evolutionCore.EpochReproduction(individuals);
+				individuals = evolutionCore.epochReproduction(individuals);
 				if(stats.size() == 10)
 					individuals.clear();
 				if(day/epochLength==40) {

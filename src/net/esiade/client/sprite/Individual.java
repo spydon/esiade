@@ -1,9 +1,6 @@
 package net.esiade.client.sprite;
 
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-
 import net.esiade.client.Esiade;
 import net.esiade.client.EvolutionCore;
 import net.esiade.client.Vector2D;
@@ -44,8 +41,8 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 					int selfReproductionLimit, int reproductionLimit, int foodStart, 
 					double jumpLength, int generation, EvolutionCore evolutionCore) {
 		super("./individual.png", position, velocity);
-		this.velocity = genome[(int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH)]
-							[(int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT)];
+		this.velocity = genome[(int)(position.x/Esiade.WIDTH*evolutionCore.getMatrixWidth())]
+							[(int)(position.y/Esiade.HEIGHT*evolutionCore.getMatrixHeight())];
 		this.veloCheck = veloCheck;
 		this.mapTrust = mapTrust;
 		this.starveRate = starveRate;
@@ -68,8 +65,8 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 //		collisions have been taken care of.
 		if(counter==veloCheck) {
 			if(Random.nextDouble() <= mapTrust) {
-				velocity = genome[(int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH)]
-								[(int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT)];
+				velocity = genome[(int)(position.x/Esiade.WIDTH*evolutionCore.getMatrixWidth())]
+								[(int)(position.y/Esiade.HEIGHT*evolutionCore.getMatrixHeight())];
 //				int x = (int)(position.x/Esiade.WIDTH*EvolutionCore.WIDTH);
 //				int y = (int)(position.y/Esiade.HEIGHT*EvolutionCore.HEIGHT);
 //				RootPanel.get().add(new Label("X: " + x + " Y: " + y));
@@ -102,9 +99,17 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	 * @see java.lang.Object#clone()
 	 */
 	public Individual clone() {
-		return new Individual(position, velocity, genome, veloCheck, 
-							mapTrust, starveRate, selfReproductionLimit, 
-							reproductionLimit, food, jumpLength, generation, evolutionCore);
+		return new Individual(position.clone(), velocity.clone(), cloneGenome(genome), veloCheck,
+							  mapTrust, starveRate, selfReproductionLimit, reproductionLimit,
+							  food, jumpLength, generation, evolutionCore);
+	}
+	
+	private Vector2D[][] cloneGenome(Vector2D[][] genome) {
+		Vector2D[][] newGenome = new Vector2D[genome.length][genome[0].length];
+		for(int x = 0; x<genome.length; x++)
+			for(int y = 0; y<genome[x].length; y++)
+				newGenome[x][y] = genome[x][y].clone();
+		return newGenome;				
 	}
 	
 	public void clearBrain() {

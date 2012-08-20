@@ -92,7 +92,9 @@ public class Esiade implements EntryPoint {
 	}
 	
 	private void run() {
-		evolutionCore = new EvolutionCore((int)getNumber(tb_matrix_x.getText()), (int)getNumber(tb_matrix_y.getText()), getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), 
+		int matrixWidth = (int)getNumber(tb_matrix_x.getText());
+		int matrixHeight = (int)getNumber(tb_matrix_y.getText());
+		evolutionCore = new EvolutionCore(matrixWidth, matrixHeight, getNumber(tb_mutation.getText()), getNumber(tb_crossover.getText()), 
 									getCType(lb_crossover.getValue(lb_crossover.getSelectedIndex())), (int)getNumber(tb_elitism.getText()), getNumber(tb_chance.getText()),
 									(int)getNumber(tb_numImmigrants.getText()), getIType(lb_itype.getValue(lb_itype.getSelectedIndex())));
 		Esiade.WIDTH = (int)getNumber(tb_width.getText());
@@ -115,7 +117,7 @@ public class Esiade implements EntryPoint {
 		for(int x = 0; x < numPoisson; x++)
 			poissons.add(new Poisson(lambda, new Vector2D(WIDTH, HEIGHT)));
 			
-		double jumpLength = scaleSpeed*Math.sqrt((WIDTH/EvolutionCore.WIDTH)*(HEIGHT/EvolutionCore.HEIGHT));
+		double jumpLength = scaleSpeed*Math.sqrt((WIDTH/matrixWidth)*(HEIGHT/matrixHeight));
 		
 		for(int x = 0; x < numInd; x++)
 			individuals.add(new Individual(new Vector2D(0.0,0.0), new Vector2D(jumpLength), evolutionCore.getRandomGenome(jumpLength), 
@@ -238,13 +240,13 @@ public class Esiade implements EntryPoint {
 		tb_obs.setEnabled(false);
 		
 		tb_mutation = new TextBox();
-		tb_mutation.setText("0.01");
+		tb_mutation.setText("0.0");
 		
 		tb_crossover = new TextBox();
 		tb_crossover.setText("0.8");
 		
 		tb_maptrust = new TextBox();
-		tb_maptrust.setText("0.9");
+		tb_maptrust.setText("1.0");
 		
 		tb_velocitycheck = new TextBox();
 		tb_velocitycheck.setText("10");
@@ -262,13 +264,13 @@ public class Esiade implements EntryPoint {
 		tb_chance.setText("0.5");
 
 		tb_epochlength = new TextBox();
-		tb_epochlength.setText("400");
+		tb_epochlength.setText("200");
 		
 		tb_numImmigrants = new TextBox();
-		tb_numImmigrants.setText("1");
+		tb_numImmigrants.setText("0");
 		
 		tb_envepochs = new TextBox();
-		tb_envepochs.setText("100");
+		tb_envepochs.setText("1000");
 
 		tb_width = new TextBox();
 		tb_width.setText("500");
@@ -280,11 +282,11 @@ public class Esiade implements EntryPoint {
 		tb_height.setWidth("30px");
 		
 		tb_matrix_x = new TextBox();
-		tb_matrix_x.setText("8");
+		tb_matrix_x.setText("5");
 		tb_matrix_x.setMaxLength(4);
 		tb_matrix_x.setWidth("30px");
 		tb_matrix_y = new TextBox();
-		tb_matrix_y.setText("8");
+		tb_matrix_y.setText("5");
 		tb_matrix_y.setMaxLength(4);
 		tb_matrix_y.setWidth("30px");
 		

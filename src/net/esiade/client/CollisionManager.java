@@ -59,7 +59,7 @@ public class CollisionManager {
 							RootPanel.get().add(new Label("" + i));
 							RootPanel.get().add(new Label("" + i2));
 
-							evolutionCore.CollisionCrossover(i, i2);
+							evolutionCore.collisionCrossover(i, i2);
 						RootPanel.get().add(new Label("-----------------"));
 							RootPanel.get().add(new Label("" + i));
 							RootPanel.get().add(new Label("" + i2));
@@ -78,7 +78,7 @@ public class CollisionManager {
 				if(isCollision(i, f)) {
 					i.eat();
 					if(!isEpochBased && i.getFood() >= i.getSelfReproductionLimit()) 
-						individuals.add(evolutionCore.SelfReproduction(i));
+						individuals.add(evolutionCore.selfReproduction(i));
 					foods.remove(f);
 				}
 			}
