@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 
 import net.esiade.client.sprite.Individual;
 
@@ -142,6 +140,7 @@ public class EvolutionCore {
 
 		for (Individual i : individuals) {
 			i.resetFood();
+			i.increaseGen();
 			i.position = v.clone();
 		}
 
@@ -179,9 +178,9 @@ public class EvolutionCore {
 
 		for (int x = 1; x <= numImmigrants; x++) {
 			if (iType == IType.RANDOM) {
-				Individual immigrant = individuals.get(individuals.size()
-						- elites.size() - x);
+				Individual immigrant = individuals.get(individuals.size()-x);
 				immigrant.position = v.clone();
+				immigrant.resetGeneration();
 				immigrant.setGenome(getRandomGenome(immigrant.getJumpLength()));
 				immigrant.setImage("./immigrant.png");
 			} else if (iType == IType.ELITE) {
@@ -213,6 +212,7 @@ public class EvolutionCore {
 	public Individual selfReproduction(Individual i) {
 		Individual i2 = i.clone();
 		i2.increaseGen();
+		
 		// i2.position = new Vector2D(WIDTH, HEIGHT);
 		i.resetFood();
 		i2.resetFood();
@@ -274,8 +274,8 @@ public class EvolutionCore {
 	 *            The second individual
 	 */
 	private void uniformCrossover(Individual i1, Individual i2) {
-		Individual temp1 = i1.clone();
-		Individual temp2 = i2.clone();
+		//Individual temp1 = i1.clone();
+		//Individual temp2 = i2.clone();
 		for (int y = 0; y < matrixHeight; y++)
 			for (int x = 0; x < matrixWidth; x++)
 				switchVectors(i1, i2, x, y);
@@ -302,6 +302,8 @@ public class EvolutionCore {
 	public void setChangeMutation(double change) {
 		if (mRate + change < 1 && mRate + change > 0)
 			mRate += change;
+		else if(mRate + change < 0)
+			mRate = 0;
 	}
 
 	public int getMatrixHeight() {

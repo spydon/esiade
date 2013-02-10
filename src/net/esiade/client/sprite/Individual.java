@@ -119,6 +119,10 @@ public class Individual extends MovingSprite implements Comparable<Individual> {
 	public Vector2D[][] getGenome() {
 		return genome;
 	}
+	
+	public void resetGeneration() {
+		this.generation = 1;
+	}
 
 	/**
 	 * @return The number of food in an individual

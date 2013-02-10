@@ -135,7 +135,7 @@ public class Esiade implements EntryPoint {
 		collisionManager = new CollisionManager(WIDTH, HEIGHT, individuals, obstacles, foods, evolutionCore);
 		DynamicsCore dynamicsCore = new DynamicsCore(getEType(lb_environment.getItemText(lb_environment.getSelectedIndex())));
 		saveState();
-		new UpdateCore(individuals, obstacles, foods, poissons, collisionManager, dynamicsCore, evolutionCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, trigHyperMut, state);
+		new UpdateCore(individuals, obstacles, foods, poissons, lambda, collisionManager, dynamicsCore, evolutionCore, changeEpoch, epochLength, isEpochBased, visibleMatrix, trigHyperMut, state);
 	}
 	
 	private void saveState() {

@@ -2,9 +2,6 @@ package net.esiade.client;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-
 import net.esiade.client.sprite.Food;
 import net.esiade.client.sprite.Individual;
 import net.esiade.client.sprite.Obstacle;
@@ -56,13 +53,13 @@ public class CollisionManager {
 			if(!isEpochBased)
 				for(Individual i2 : individuals) {
 					if(!i.equals(i2) && isCollision(i, i2)) {
-							RootPanel.get().add(new Label("" + i));
-							RootPanel.get().add(new Label("" + i2));
+//							RootPanel.get().add(new Label("" + i));
+//							RootPanel.get().add(new Label("" + i2));
 
 							evolutionCore.collisionCrossover(i, i2);
-						RootPanel.get().add(new Label("-----------------"));
-							RootPanel.get().add(new Label("" + i));
-							RootPanel.get().add(new Label("" + i2));
+//							RootPanel.get().add(new Label("-----------------"));
+//							RootPanel.get().add(new Label("" + i));
+//							RootPanel.get().add(new Label("" + i2));
 
 					}
 				}

@@ -11,7 +11,7 @@ import net.esiade.client.sprite.Individual;
 
 public class StatisticsCore {
 	
-	private static int[] foodsEaten;
+	//private static int[] foodsEaten;
 	
 	public static void allIndividualsResult(ArrayList<Individual> individuals) {
 		final DialogBox db = new DialogBox();

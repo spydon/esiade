@@ -42,13 +42,14 @@ public class UpdateCore {
     private ArrayList<Obstacle> obstacles;
     private ArrayList<Food> foods;
 	private ArrayList<Poisson> poissons;
+	private int poissonLambda;
     private CollisionManager collisionManager;
     private DynamicsCore dynamicsCore;
     private Label l_day, l_ind, l_food, l_obs, l_epoch, l_foodPerEpoch, l_fitness;
     private HashMap<String, Widget> state;
     private double[] fitnessHistory = {0.0,0.0,0.0,0.0};
     private double fitnessMed = 0.0;
-    private int lastSpawned = 0;
+    //private int lastSpawned = 0;
     private ArrayList<Label> stats = new ArrayList<Label>();
     private EvolutionCore evolutionCore;
 
@@ -56,6 +57,7 @@ public class UpdateCore {
 						ArrayList<Obstacle> obstacles,
 						ArrayList<Food> foods,
 						ArrayList<Poisson> poissons,
+						int poissonLambda,
 						CollisionManager collisionManager, 
 						DynamicsCore dynamicsCore,
 						EvolutionCore evolutionCore,
@@ -73,6 +75,7 @@ public class UpdateCore {
 		this.obstacles = obstacles;
 		this.foods = foods;
 		this.poissons = poissons;
+		this.poissonLambda = poissonLambda;
 		this.collisionManager = collisionManager;
 		this.epochLength = epochLength;
 		this.changeEpoch = changeEpoch;
@@ -244,21 +247,28 @@ public class UpdateCore {
 					sum+=fitnessHistory[x];
 				double newFitnessMed = sum/fitnessHistory.length;
 				
-				if(0.8*newFitnessMed <= fitnessMed)
-					evolutionCore.setChangeMutation(0.1);
-				else
-					evolutionCore.setChangeMutation(-0.02);
+				if(this.trigHypMut) {
+					if(0.8*newFitnessMed <= fitnessMed)
+						evolutionCore.setChangeMutation(0.1);
+					else
+						evolutionCore.setChangeMutation(-0.02);
+				}
 				
 				fitnessMed = newFitnessMed;
 				individuals = evolutionCore.epochReproduction(individuals);
-				if(stats.size() == 10)
+				if(stats.size() > 10)
 					individuals.clear();
 				if(day/epochLength==40) {
 					stats.add(new Label(";"));
 					day = 0;
 					for(Individual i:individuals)
 						i.clearBrain();
-				}// [clearBrain || i <- Individuals]
+					ArrayList<Poisson> newPoissons = new ArrayList<Poisson>(0);
+					for(int x = 0; x < poissons.size(); x++)
+						newPoissons.add(new Poisson(poissonLambda, new Vector2D(WIDTH, HEIGHT)));
+					poissons.clear();
+					poissons = newPoissons;
+				}
 			}
 			foods.add(new Food(poissons.get(Random.nextInt(poissons.size())).getVector()));
 		}
