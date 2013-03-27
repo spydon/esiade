@@ -93,70 +93,74 @@
 \maketitle
 
 \section*{Abstract}
-Genetic algorithms (GAs) are a well established optimization tool for static problems. Recently, genetic algorithms have been proposed to improve the adaptivity of GAs in dynamic environments. In this paper, we attempted to implement and compare some of these methods; two methods based on mutation, and two based on periodic insertions of \emph{immigrants}. A extensive and easily available test environment was developed and used in order to compare the performance of these methods. The results show that the immigrant-based methods were useful for some types of  dynamic systems.
+Genetic algorithms (GA) is a well established tool for static optimization problems. Recently, genetic algorithms have been proposed to improve the adaptivity of GAs in dynamic environments. In this paper, we have attempted to implement and compare some of these methods; two methods based on mutation, and two based on periodic insertions of \emph{immigrants}. An extensive and easily available test environment was developed and used in order to compare the performance of these methods. The results confirm that the immigrant-based methods were useful for some types of  dynamic systems.
 
 
 \section{Introduction}
-Genetic algorithms are a common tool to find solutions to complex problems, often with high dimensionality. Although much research has been done on the subject, this research has to some extent focused on problems in a stationary environment.
+Genetic algorithms is a common tool to find solutions to complex optimization problems, often with high dimensionality. Although much research has been done on the subject, this research has to some extent focused on problems in a stationary environment.
 
-Since in a dynamic environment the fitness conditions are changing over time, a traditional GA is not very suited for solving dynamic problems, as it is likely that the population will quickly converge and not be able to adapt when the environment changes.
+Since in a dynamic environment the fitness conditions are changing over time, a traditional GA is not well suited for solving dynamic problems, as it is likely that the population will quickly converge and not be able to adapt to the changes in the environment.
 
 Several approaches have been proposed in order to allow GAs to maintain the population diversity, two common methods are \emph{random} or \emph{elite immigrants} and \emph{triggered hypermutation} [1][2].
 
 The goal of this project is to evaluate the methods proposed in earlier work, on a dynamic environment designed for the purpose.
 
 \section{Environment}
-Our test environment consists of a simple map containing clusters of "food", and is initialized randomly. The goal of the population is to find paths leading to areas where the food is distributed. A dynamic environment is created by changing the positions of the food in the map. This can be done in many ways, and we settle for three different methods of changing the map.
+Our test environment consists of a simple map containing clusters of ``food'', and is initialized randomly. The goal of the population is to find paths leading to areas where the food is distributed. A dynamic environment is created by changing the positions of the food in the map. This can be done in many ways, and we settle for three different methods of changing the map;
 
 \begin{itemize}
 
 \item
-Slightly changing - Small changes are done, but fairly often. The optimum after a change will lie close to the earlier optimum.
+Slightly changing, i.e.  small changes are done, but fairly often. The optimum after a change will lie close to the earlier optimum.
 \item
-Abruptly changing - The map is reinitialized, changing the positions of obstacles and enemies. This must be done rarely, as to give the population the time to re-adapt.
+Abruptly changing, i.e  big changes are done infrequently. This must be done rarely, as to give the population the time to re-adapt.
 \item
-Seasonally changing - similar to abrupt changes, the changes are large and rare, but the number of maps is finite and periodic.
+Seasonally changing - similar to abrupt changes the changes are large and rare, but the number of food distribution areas is finite and periodic.
 \end{itemize}
 
-We anticipate that the different dynamic methods tested (explained below) will perform differently depending on the type of dynamic maps used.
+We anticipate that the different dynamic methods tested (explained below) will perform differently well, depending on the type of dynamic maps used.
 
 \section{Suggested Dynamic Methods}
 \subsection{Hypermutation}
 The concept of mutation is critical for genetic algorithms, as it is through mutation a genetic algorithm maintains its diversity. As the problem of training in a dynamic environment is to avoid or overcome early convergence, it is tempting to try training with a higher degree of mutation than commonly used in static environments. Although this is a simple concept, \cite{cobb} shows that this method can generate relatively good results.
 
 \subsection{Triggered Hypermutation}
-A higher mutation rate results in higher diversity as indicated above, but a high mutation rate makes it more difficult to converge. The mutation rate is therefore generally kept low in standard GAs. The method of using a high mutation rate in a dynamic system might therefore lead to non-converging individuals.
+A higher mutation rate results in higher diversity as indicated above, but a high mutation rate decreases the degree of convergence. The mutation rate is therefore generally kept low in standard GAs. The method of using a high mutation rate in a dynamic system might therefore lead to non-converging behaviour patterns.
 
-Triggered hypermutation is a proposed solution to this problem. The mutation rate in general is kept low, giving better convergence. When the system is altered in a way that decreases the fitness, the hypermutation stage is started and the mutation rate is temporarily increased giving the same effect as the method explained above, but hopefully avoids the negative effects.
+Triggered hypermutation is a proposed solution to this problem. The mutation rate in general is kept low, giving better convergence. When the system is altered in a way that decreases the fitness (such as an abrupt change in the environment), the hypermutation stage is started and the mutation rate is temporarily increased giving the same effect as the method explained above, but hopefully avoids the negative effects.
 
-The results in \cite{cobb} and \cite{simoes} show that this method is efficient when the changes in the environment are small, but does not cope as well with abrupt changes.
+The results in \cite{cobb} and \cite{simoes} show that this method is efficient in cases where the changes in the environment are small, but does not cope well with abrupt changes.
 
 
 \subsection{Immigrants}
-Random immigrants and elitism-based immigrants use a different approach to maintain diversity. In these methods, some individuals with low fitness are removed and replaced with new individuals.
+Random immigrants and elitism-based immigrants use a somewhat different approach to maintain diversity. In these methods, some individuals with low fitness are removed and replaced with new individuals.
 
-With random immigrants, these new individuals are randomly created (by the same method individuals were initialized at the beginning).
+With random immigrants, new individuals are randomly created (by the same method individuals were initialized at the beginning), thus introducing new genetic material.
 
-With elitism-based immigrants, the individuals with high fitness are remembered. When the total fitness decreases (potentially due to changes in the environment), individuals with low fitness are removed and individuals from this elite-set are reintroduced.
+With elitism-based immigrants, the individuals with high fitness are remembered and saved. When the total fitness decreases (potentially due to changes in the environment), individuals with low fitness are removed and individuals from this elite-set are reintroduced.
 
-The random immigrants method has been shown to be beneficial for most dynamic environments, compared to the standard GA, but not necessarily the best method\cite{yang}. Using elite immigrants, the results can be improved for slightly changing and seasonal environments, but as this method keeps a lower diversity, it does not perform as well when the changes are more abrupt.
+The random immigrants method has been shown to be beneficial for most dynamic environments, compared to the standard GA, but not necessarily the best method\cite{yang}.
+
+Using elite immigrants, the results can be improved for slightly changing and seasonal environments, but as this method keeps a lower diversity, it does not perform as well when the changes are more abrupt.
 
 \section{Genome representation}
-The behavior of an individual depends on its genome, which decides how it moves on the map. The genome is represented as a matrix of vector values where each position in the matrix represents a part of the map, and the vector stored at the position is the direction in which the individual will move. For a matrix of size $m \times n$, this is represented as m arrays of size n.
+The behavior of an individual depends on its genome, which decides how it moves on the map. The genome is represented as a matrix of vector values where each position in the matrix represents a fraction of the map, and the vector stored at the position is the direction in which the individual will move. For a matrix of size $m \times n$, this is represented as m arrays of size n.
 
-Consider a map of size $50m \times 50n$ and a matrix of size $m \times n$. Then every matrix position will represent a $50\times50$ square in the map. When the individual has a position inside that square, it's speed and direction will be given by the vector stored in that position of the matrix.
+Consider a map of size $50m \times 50n$ and a matrix of size $m \times n$. Then every matrix position will represent a $50\times50$ square in the map. When the individual has a position inside that square, its speed and direction will be given by the vector stored in that position of the matrix. In this way, the movement of the individuals is given directly from their genes.
 
 \section{Selection and Crossover strategies}
-Two different crossover types were used, epoch and collision learning. In collision learning, the individuals crossover when they collide in the map, provided they have collected some fixed amount of food. Two new individuals are created by one either one-point, two-point or uniform crossover.
+Two different crossover types were used, epoch and collision learning. In collision learning, the individuals crossover when they collide in the map, provided they have collected some fixed amount of food. Two new individuals are created using either one-point, two-point or uniform crossover.
 
 This type of crossover was useful during implementation, as the results could easily be seen graphically. But as this is not a traditional way of selection, epoch learning was used as only then could the implementation of the above methods be done in a way that is comparable with the result in previous research.
 
-In epoch learning, the individuals search the map for a fixed set of updates, one epoch. At the end of the epoch, individuals were re-combinated and mutated depending on the settings used. The selection method used worked by first sorting the list of individuals, with the highest fitness first, using the number of food collected as a measure of the fitness. Then, each individual from the beginning crosses over with a probability $\alpha$ with the first individual. If not, the individual crosses over with the same probability $\alpha$ with the second individual, and so on. In general, only the best half of the individuals reproduce.
+In epoch learning, the individuals search the map while a fixed number of updates, are performed, i.e. one epoch. At the end of the epoch, individuals are recombined and mutated depending on the settings chosen.
+
+The selection method used here works by first sorting the list of individuals, with the highest fitness first, using the number of food collected as a measure of the fitness. Then, each individual from the beginning crosses over with a probability $\alpha$ with the first individual. If not, the individual crosses over with the same probability $\alpha$ with the second individual, and so on. In general, only the best half of the individuals reproduce.
 
 \section{Results}
-During the course of this project, the above proposed algorithms were implemented and testing was performed in order to compare their performances. To this effect, tests were run for all combinations of maps (static, slightly changing, abruptly changing and periodicly changing maps) and every algorithm (normal, high mutation, triggered hypermutation, random immigrants, elite immigrants).
+During the course of this project, the above proposed algorithms were implemented and testing was performed in order to compare their performances. To this effect, tests were run for all combinations of maps (static, slightly changing, abruptly changing and periodicly changing maps) and every algorithm (normal, high mutation, triggered hypermutation, random immigrants and elite immigrants).
 
-In order to perform testing, a graphical web-interface was created. This interface can for a limited time be reached at http://mindlevel.net. As to keep the differences between how the algorithms were tested as low as possible, most parameters were kept constant during testing;
+In order to perform testing, a graphical web-interface was developed. This interface can for a limited time be reached at http://mindlevel.net. As to keep the differences between how the algorithms were tested as low as possible, most parameters were kept constant during testing;
 
 \begin{lstlisting}
 Training: epoch
@@ -225,22 +229,22 @@ The genome is represented as an array of arrays. During a crossover (assuming 1-
 \begin{figure}[h!]
 \includegraphics[width=0.4\textwidth]{TopRight.png}
 \includegraphics[width=0.4\textwidth]{BottomLeft.png}
-\caption{The map in the left pictures is "easier" than the map in the right picture, even though one map is a rotation of the other. This is because the 1-point crossover illustrated to the left is possible with our representation of a genome, but the crossover to the right is not.}
+\caption{The map in the left pictures is ``easier'' than the map in the right picture, even though one map is a rotation of the other. This is because the 1-point crossover illustrated to the left is possible with our representation of a genome, but the crossover to the right is not.}
 \label{fig:bias}
 \end{figure}
 
-By randomly changing the starting position of the individuals at the start of each epoch, the impact of this bias can be lowered, as it is as as likely that the individuals will spawn with the food along a horizontal line from their position, as along a vertical line. Because of this problem of representation, uniform crossover was used consistently during testing as its bias is expected to be lower.
+By randomly changing the starting position of the individuals at the start of each epoch, the impact of this bias can be lowered, as it is as likely that the individuals will spawn with the food along a horizontal line from their position, as along a vertical line. Because of this problem of representation, uniform crossover was used consistently during testing as its bias is expected to be lower.
 
 \subsection{Problem Difficulty}
-In order to test the performance of the proposed dynamic methods, a graphical map was developed that provided the context in which evolution was taking place. In retrospect, this context proved to be far from optimal, mainly because of the difficulty of the problem. As can be seen in figure \ref{fig:static}, the algorithms do not converge even for a static environment, at the same time as the results for random behaviour is relatively high (never less that 0.5). This makes it difficult to know whether a higher fitness is due to random behaviour, or due to the nature of the method being run.
+In order to test the performance of the proposed dynamic methods, a graphical map was developed that provided the context in which evolution was taking place. In retrospect, this context proved to be far from optimal, mainly because of the difficulty of the chosen optimization problem. As can be seen in figure \ref{fig:static}, the algorithms do not converge even for a static environment, at the same time as the results for the general behaviour is relatively high (the fitness is never less that 0.5). This makes it difficult to know whether a higher fitness is due to random behaviour, or due to the nature of the method being run.
 
 Another disadvantage was the dependency of the graphical interface. This requires significantly more processing power and time, making testing a time-consuming and cumbersome project. The results presented above were based on ten runs for each of the twenty combinations, which is a minimum number at best.
 
 \subsection{Triggered Hypermutation}
-The results obtained using triggered hypermutation did not display the results one would have expected. It is likely that this is due to the implementation, as the sources are not clear on the exact details. There are several parameters involved; i.e. ehen to enter the hypermutation phase, whether to decrease the mutation gradually or switching directly between high and low and how long the hypermutation phase should last. With this said, no conclusions are drawn about the effectiveness of this algorithm, based on the results obtained in this paper.
+The results obtained using triggered hypermutation did not display the results one would have expected. It is likely that this is due to the implementation, as the sources used are not clear on the exact implementation details. There are several parameters involved; when to enter the hypermutation phase, whether to decrease the mutation gradually or switching directly between high and low and how long the hypermutation phase should last. With this said, no conclusions can be drawn about the effectiveness of this algorithm, based on the results obtained in this paper.
 
 \section{Proposed Future Work}
-We believe that the methodology used in this paper is suitable to reach the desired goal, but that the chosen environment could be improved. To further improve the results, a new environment and a new fitness function should be used to carry out the testing, in order to make the results more stable and more comparable. For the same reason, the number of tests could be significantly higher, although this would require more resources for testing.
+We believe that the methodology used in this paper is suitable to reach the desired goal, but that the chosen environment could be improved. To further improve the results, a new environment and a new fitness function should be used to carry out the testing, in order to make the results more stable and more comparable. For the same reason, the number of tests could be significantly higher, although this might require more resources for testing.
 
 
 
